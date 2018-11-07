@@ -17,21 +17,29 @@
 #' @seealso \code{\link{selectDenseScatterArea}} \code{\link{doRegressConstrained}}
 #' @export
 #' @examples
+morphology_corr_new <- function(fcb,
+                                uptake = NULL,
+                                channel,
+                                opt = c("earth","knijnenburg", "lm")
+                                subsample = 20e3,
+                                exp_info = NULL,
+                                apply_scales = TRUE,
+                                updateProgress = NULL) {
 
-morphology_corr <- function(fcb_df, bc_single_level = NULL, channel,
-                            opt = "regression", subsample = 10e3, trans = 'arcsinh',
-                            updateProgress = NULL,
-                            cofactor_bc1 = NULL, cofactor_uptake = NULL,
-                            uptake_channel = NULL) {
-  # fcb_df
-  # bc_single_level <- fcb_df
-  # channel <- "Pacific-Orange-A"
-  # levels <- 6
-  # cofactor_bc1 <- 150
-  # opt <- "regression"
-  # updateProgress <- NULL
-  # subsample <- 10e3
-  # trans  <- "arcsinh"
+  if (is.null(uptake)) {
+    warning("No uptake control provided, using barcoded data to train model.")
+    uptake <- fcb
+  }
+
+  if (apply_scales == TRUE) {
+    fcb <- apply_scales(fcb, exp_info),
+    uptake <- apply_scales(fcb, exp_info)
+  } else{
+    stop("apply_scales was not TRUE/FALSE")
+  }
+
+
+
   if(opt == "regression") {
     if (is.function(updateProgress)) {
       updateProgress(detail = "Mapping cellular Density")
@@ -81,5 +89,3 @@ morphology_corr <- function(fcb_df, bc_single_level = NULL, channel,
   }
   return(fcb_df2[, channel])
 }
-
-

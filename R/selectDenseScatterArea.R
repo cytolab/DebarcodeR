@@ -8,22 +8,34 @@
 #'
 #' @seealso text
 #' @examples text
+# fsc_ssc <- c(fsc = 'FSC-A', ssc = 'SSC-A')
+# fsc_ssc[['fsc']]
+#fsc_ssc[['fsc']]
 
-selectDenseScatterArea <- function (data, fsc = 'FSC-A', ssc = 'SSC-A',
+selectDenseScatterArea <- function (data,
+                                    fsc_ssc = c(fsc = 'FSC-A', ssc = 'SSC-A'),
                                     subsample = 10e3) {
-
+  data <- as.data.frame(data)
+  fsc <- fsc_ssc[1]
+  ssc <- fsc_ssc[2]
   if(!is.null(subsample) & (nrow(data) > subsample)){
     data <- data[sample(1:nrow(data), subsample),]
   }
 
-  fsc_limits <- c(min(data[fsc]), max(data[fsc]))
-  ssc_limits <- c(min(data[ssc]), max(data[ssc]))
+  fsc_limits <- c(min(data[,fsc]), max(data[,fsc]))
+  ssc_limits <- c(min(data[,ssc]), max(data[,ssc]))
+
   S <- 8
   area <- 0.95
   FGA <- matrix(0, 2^S, 2^S)
   AP <- matrix(1, 2^S, 2^S)
+  print("31")
   N <- nrow(data)
-  P <- MASS::kde2d(data[,fsc], data[,ssc], n = 2^S, lims = c(fsc_limits, ssc_limits))
+  #as.data.frame(uptake[,'fsc_a'])
+
+  P <- MASS::kde2d(data[,fsc],
+                   data[,ssc],
+                   n = 2^S, lims = c(fsc_limits, ssc_limits))
   x_d <- matrix(rep(P[[1]],2^S), ncol = 2^S, nrow = 2^S, byrow = TRUE)
   y_d <- matrix(rep(P[[2]],2^S), ncol = 2^S, nrow = 2^S, byrow = FALSE)
   z_d <- P[[3]]

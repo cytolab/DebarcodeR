@@ -15,17 +15,29 @@
 #' @seealso text
 #' @examples text
 
-doRegressContrained <- function(single_level_bc, fcb_df = NULL, Loc, weight, trans,
+doRegressContrained <- function(single_level_bc, fcb_df = NULL,
+                                Loc, weight, trans,
+                                fsc_ssc = c(fsc = 'FSC-A', ssc = 'SSC-A'),
                                 val3 = NULL, constrained_flag = 1,
                                 columns = NULL, monodir = NULL, cofactor = NULL) {
   #print(cofactor)
+
+  print('drc')
+  single_level_bc <- as.data.frame(single_level_bc)
+  fcb_df <- as.data.frame(fcb_df)
+
+  fsc <- fsc_ssc[1]
+  ssc <- fsc_ssc[2]
+
+
   lo <- 1 #log offset
-  fsc_limits <- c(min(single_level_bc['FSC-A']), max(single_level_bc['FSC-A']))
-  ssc_limits <- c(min(single_level_bc['SSC-A']), max(single_level_bc['SSC-A']))
+
+  fsc_limits <- c(min(single_level_bc[fsc]), max(single_level_bc[fsc]))
+  ssc_limits <- c(min(single_level_bc[ssc]), max(single_level_bc[ssc]))
   data.corr.ls <- vector("list", length = length(columns))
 
   for (n in seq_along(columns)){
-    ind <- append(c("FSC-A", "SSC-A"), columns[n])
+    ind <- append(c(fsc, ssc), columns[n])
     D <- single_level_bc[,ind]
     if (is.null(fcb_df)) {
       D2 <- D
