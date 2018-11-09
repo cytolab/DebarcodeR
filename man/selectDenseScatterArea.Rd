@@ -4,17 +4,17 @@
 \alias{selectDenseScatterArea}
 \title{find the area which contains 95% of the data}
 \usage{
-selectDenseScatterArea(data, fsc = "FSC-A", ssc = "SSC-A",
+selectDenseScatterArea(data, fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"),
   subsample = 10000)
 }
 \arguments{
 \item{data}{text}
 
+\item{subsample}{text}
+
 \item{fsc}{text}
 
 \item{ssc}{text}
-
-\item{subsample}{text}
 }
 \value{
 some text

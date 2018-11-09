@@ -8,32 +8,24 @@
 #' @param output string, default "classif," also "plot;" what to return?
 #' @param channel string, channel which is barcoded, only needed if output == "plot"
 #'
-#'
 #' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
 #'  otherwise number corresponds to the barcoding level assignment of that cell
-#'
-#' @seealso \code{\link{fit_models}}, \code{\link{morphology_corr}}
 #' @export
 #' @examples
 #'
 
 assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02, output = "classif", channel = NULL){
-  # likelihoodcut <- 8
-  # ambiguitycut <- 0.05
-  #assign.cells(mydf.i, probs, 8, 0.02, output = "plot")
-  #
-  # fcb_df <- mydf.i
-  # channel <- "Pacific-Blue-A"
-  
+
+
   row.max <-  apply(probs, 1, sum)
   probs.norm.row <- sweep(probs, 1, row.max, FUN="/")
-  
+
   col.max <-  apply(probs, 2, max)
   probs.norm.col <- sweep(probs, 2, col.max, FUN="/")
 
-  
+
   classif <- rep(0, nrow(fcb_df))
-  
+
   if(ncol(probs) > 1) { # if assigning more than one level
     classif <- as.numeric(apply(probs.norm.row, 1, which.max))
   } else { # if assigning only one level
@@ -49,7 +41,7 @@ assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,
   # length(unlist(apply(probs.norm.row, 1, which.max)))
   # str(t(apply(probs, 1, function(vec) {vec/sum(vec)})))'
   likely <- probs.norm.col > 1/likelihoodcut
-  
+
   if(ncol(probs) > 1) { # if assigning more than one level
     likely.sum <- apply(likely, 1, sum) #converts logical to numeric
     print(paste0(round(sum(apply(likely, 1, any))/nrow(likely)*100, 3), "% above likelihood cutoff"))

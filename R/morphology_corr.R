@@ -14,11 +14,7 @@
 #'
 #' @return numeric vector of length nrow(fcb_df) representing the morphology corrected channel
 #'
-#' @seealso \code{\link{selectDenseScatterArea}} \code{\link{doRegressConstrained}}
-#' @export
-#' @examples
-
-morphology_corr <- function(fcb_df, bc_single_level = NULL, channel,
+morphology_corr_old <- function(fcb_df, bc_single_level = NULL, channel,
                             opt = "regression", subsample = 10e3, trans = 'arcsinh',
                             updateProgress = NULL,
                             cofactor_bc1 = NULL, cofactor_uptake = NULL,
@@ -81,5 +77,3 @@ morphology_corr <- function(fcb_df, bc_single_level = NULL, channel,
   }
   return(fcb_df2[, channel])
 }
-
-

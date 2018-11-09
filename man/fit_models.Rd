@@ -4,8 +4,9 @@
 \alias{fit_models}
 \title{Defines populations on barcoded datasets}
 \usage{
-fit_models(vec, levels, opt = "mixture", dist = NULL, trans = "arcsinh",
-  cofactor = NULL, subsample = 10000, updateProgress = NULL)
+fit_models(vec, levels, opt = "mixture", dist = NULL,
+  trans = "arcsinh", cofactor = NULL, subsample = 10000,
+  updateProgress = NULL)
 }
 \arguments{
 \item{vec}{a vector of barcode intensities, usually post morphology correction}

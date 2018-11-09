@@ -5,7 +5,8 @@
 \title{obtain residulas afer monitonically constrained regression}
 \usage{
 doRegressContrained(single_level_bc, fcb_df = NULL, Loc, weight, trans,
-  val3 = NULL, constrained_flag = 1, columns = NULL, monodir = NULL,
+  fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"), val3 = NULL,
+  constrained_flag = 1, columns = NULL, monodir = NULL,
   cofactor = NULL)
 }
 \arguments{

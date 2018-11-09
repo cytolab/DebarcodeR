@@ -31,6 +31,3 @@ Defines populations on barcoded datasets
 \examples{
 
 }
-\seealso{
-\code{\link{fit_models}}, \code{\link{morphology_corr}}
-}
