@@ -10,6 +10,7 @@
 #' @param trans string, transformation to apply to the barcoding channels, defaults to arcsinh, also log10
 #' @param cofactor Numeirc, Cofactor used for the arcsinh transformation on vec
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
+#' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)
 #' @param updateProgress used in reactive context (shiny) to return progress information to GUI
 #'
 #'
@@ -30,6 +31,7 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
                        trans = "arcsinh", #asinh or log10
                        cofactor = NULL,
                        subsample = 10e3,
+                       trim = 0,
                        updateProgress = NULL){#cofactor for asinh transofrmation
 
   if (trans == "log10"){
@@ -38,7 +40,9 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
     vec <- asinh(vec/cofactor)
   }
 
-  vecss <- sample(vec, subsample, replace = TRUE)
+  quantiles <- quantile(vec, c(trim/2, 1- trim/2))
+  vec.trim <- vec[quantiles[1] < vec & quantiles[2] > vec]
+  vecss <- sample(vec.trim, subsample, replace = TRUE)
 
   if(opt == "mixture") {
     #cofactor <- 150
@@ -118,7 +122,7 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
     vec.split <- split(vec, classif)
 
     hist.probs <- list()
-    for (i in as.character(1:max(names(vec.split)))){
+    for (i in as.character(1:max(as.numeric(names(vec.split))))){
       myhist <- hist(vec.split[[i]],100, plot = FALSE)
       binprobs <- myhist$counts/sum(myhist$counts)
       hist.probs.i<- rep(0, times = length(vec))
