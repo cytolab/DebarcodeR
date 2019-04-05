@@ -3,3 +3,7 @@
 export(assign_cells)
 export(fit_models)
 export(morphology_corr)
+export(morphology_corr.earth)
+export(morphology_corr.knignenburg)
+export(morphology_corr.lm)
+import(earth)

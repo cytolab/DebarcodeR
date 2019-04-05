@@ -5,7 +5,7 @@
 \title{Defines populations on barcoded datasets}
 \usage{
 fit_models(vec, levels, opt = "mixture", dist = NULL,
-  trans = "arcsinh", cofactor = NULL, subsample = 10000,
+  trans = "arcsinh", cofactor = NULL, subsample = 10000, trim = 0,
   updateProgress = NULL)
 }
 \arguments{
@@ -22,6 +22,8 @@ fit_models(vec, levels, opt = "mixture", dist = NULL,
 \item{cofactor}{Numeirc, Cofactor used for the arcsinh transformation on vec}
 
 \item{subsample}{Integer, number of cells to subsample, defaults to 10,000}
+
+\item{trim}{numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)}
 
 \item{updateProgress}{used in reactive context (shiny) to return progress information to GUI}
 }
