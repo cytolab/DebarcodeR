@@ -1,5 +1,4 @@
 #' Defines populations on barcoded datasets
-#'
 #' @param fcb_df dataframe, representing the barcoded data, columns for each channel, rows for each cell
 #' @param probs matrix of probabilites under population models, returned by 'fit_models'
 #' @param likelihoodcut numeric, a likelihood cutoff for discarding unlikely cells, less than 1/k as likely as the most likely cell from that population
@@ -7,12 +6,10 @@
 #'  discards cells with more than 2% chance of originating from another population
 #' @param output string, default "classif," also "plot;" what to return?
 #' @param channel string, channel which is barcoded, only needed if output == "plot"
-#'
 #' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
 #'  otherwise number corresponds to the barcoding level assignment of that cell
 #' @export
 #' @examples
-#'
 
 assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02, output = "classif", channel = NULL){
 
