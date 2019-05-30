@@ -11,7 +11,8 @@
 #' @export
 #' @examples
 
-assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02, output = "classif", channel = NULL){
+assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02, 
+                         output = "classif", channel = NULL){
 
 
   row.max <-  apply(probs, 1, sum)
@@ -42,7 +43,6 @@ assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,
   if(ncol(probs) > 1) { # if assigning more than one level
     likely.sum <- apply(likely, 1, sum) #converts logical to numeric
     print(paste0(round(sum(apply(likely, 1, any))/nrow(likely)*100, 3), "% above likelihood cutoff"))
-    #print(classif[which(likely.sum != 1)])
     classif[which(likely.sum < 1)] <- 0
     #print(head(probs.norm.row))
     non.ambigious <- apply(probs.norm.row, 1, max) > (1 - ambiguitycut)
