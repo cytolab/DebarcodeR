@@ -4,8 +4,14 @@
 \alias{morphology_corr.knignenburg}
 \title{Corrects morphology based on scatter or uptake control.}
 \usage{
-morphology_corr.knignenburg(fcb, uptake, channel, fsc_ssc = c(fsc =
-  "FSC-A", ssc = "SSC-A"), subsample = 10000, updateProgress = NULL)
+morphology_corr.knignenburg(
+  fcb,
+  uptake,
+  channel,
+  fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"),
+  subsample = 10000,
+  updateProgress = NULL
+)
 }
 \arguments{
 \item{fcb}{the barcoded dataframe, post compensation and preprocessing}

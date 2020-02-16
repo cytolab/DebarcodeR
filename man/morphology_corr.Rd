@@ -4,17 +4,22 @@
 \alias{morphology_corr}
 \title{Corrects morphology based on scatter or uptake control.}
 \usage{
-morphology_corr(fcb, uptake = NULL, channel, method = c("earth",
-  "knijnenburg", "lm"), predictors = c("FSC-A", "SSC-A"),
-  subsample = 20000, exp_info = NULL, ret.model = FALSE,
-  apply_scales = TRUE, updateProgress = NULL, ...)
+morphology_corr(
+  fcb,
+  uptake = NULL,
+  channel,
+  method = c("earth", "knijnenburg", "lm"),
+  predictors = c("FSC-A", "SSC-A"),
+  subsample = 20000,
+  ret.model = TRUE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{channel}{The name (string) of the channel to be corrected, ie. the column name in 'fcb_df'}
 
 \item{subsample}{Integer, number of cells to sample (with replacement) for the morphology correction, defaults to 10,000.}
-
-\item{updateProgress}{used in reactive context (shiny) to return progress information to GUI}
 
 \item{fcb_df}{the barcoded dataframe, post compensation and preprocessing}
 
@@ -23,6 +28,8 @@ morphology_corr(fcb, uptake = NULL, channel, method = c("earth",
 \item{opt}{String, Morphology correction apporach, either "regression" (default) or "control dye"}
 
 \item{trans}{String, transformation to apply to the barcoding channels, defaults to arcsinh, also log10}
+
+\item{updateProgress}{used in reactive context (shiny) to return progress information to GUI}
 
 \item{cofactor_bc1}{Numeirc, Cofactor used for the arcsinh transformation on the barcoding channels}
 

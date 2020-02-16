@@ -10,6 +10,8 @@
 #' @return a tibble/data.frame with the selected channel corrected for fsc and ssc
 #' @import earth
 #' @export
+#'
+#'
 morphology_corr.earth <- function(fcb,
                                   uptake,
                                   ret.model = FALSE,

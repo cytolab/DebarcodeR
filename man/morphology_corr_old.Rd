@@ -4,10 +4,18 @@
 \alias{morphology_corr_old}
 \title{Corrects morphology based on scatter or uptake control.}
 \usage{
-morphology_corr_old(fcb_df, bc_single_level = NULL, channel,
-  opt = "regression", subsample = 10000, trans = "arcsinh",
-  updateProgress = NULL, cofactor_bc1 = NULL, cofactor_uptake = NULL,
-  uptake_channel = NULL)
+morphology_corr_old(
+  fcb_df,
+  bc_single_level = NULL,
+  channel,
+  opt = "regression",
+  subsample = 10000,
+  trans = "arcsinh",
+  updateProgress = NULL,
+  cofactor_bc1 = NULL,
+  cofactor_uptake = NULL,
+  uptake_channel = NULL
+)
 }
 \arguments{
 \item{fcb_df}{the barcoded dataframe, post compensation and preprocessing}

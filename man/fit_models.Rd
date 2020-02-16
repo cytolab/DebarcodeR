@@ -4,9 +4,17 @@
 \alias{fit_models}
 \title{Defines populations on barcoded datasets}
 \usage{
-fit_models(vec, levels, opt = "mixture", dist = NULL,
-  trans = "arcsinh", cofactor = NULL, subsample = 10000, trim = 0,
-  updateProgress = NULL)
+fit_models(
+  vec,
+  levels,
+  opt = "mixture",
+  dist = NULL,
+  trans = "arcsinh",
+  cofactor = NULL,
+  subsample = 10000,
+  trim = 0,
+  updateProgress = NULL
+)
 }
 \arguments{
 \item{vec}{a vector of barcode intensities, usually post morphology correction}
@@ -36,9 +44,6 @@ If jenks natural breaks optimization is used, the probability is estimated empir
 \description{
 This function allows you to calculate the probability of a cell originating from a given population using
 either gaussian mixture modeling or jenks natural breaks classificatio.n
-}
-\examples{
-
 }
 \seealso{
 \code{\link{morphology_corr}}

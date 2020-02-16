@@ -21,7 +21,7 @@
 #'
 #' @seealso \code{\link{morphology_corr}}
 #' @export
-#' @examples
+#' @import classInt mixsmsn sn
 #'
 
 fit_models <- function(vec, #vector of barcoding intensities, output of morphology.corr

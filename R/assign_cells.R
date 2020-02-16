@@ -11,10 +11,7 @@
 #' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
 #'  otherwise number corresponds to the barcoding level assignment of that cell
 #' @export
-#' @examples
-#'
-
-assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02, 
+assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,
                          output = "classif", channel = NULL){
 
 
@@ -23,7 +20,6 @@ assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,
 
   col.max <-  apply(probs, 2, max)
   probs.norm.col <- sweep(probs, 2, col.max, FUN="/")
-
 
   classif <- rep(0, nrow(fcb_df))
 

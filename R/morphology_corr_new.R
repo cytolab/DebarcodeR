@@ -14,17 +14,23 @@
 #' @return numeric vector of length nrow(fcb_df) representing the morphology corrected channel or a list containing the vector and the model used to correct it.
 #'
 #' @export
-morphology_corr <- function(fcb,
-                            uptake = NULL,
-                            channel,
-                            method = c("earth", "knijnenburg", "lm"),
-                            predictors = c('FSC-A', 'SSC-A'),
+
+#mybarcodedff$barcodes$pacificOrange$deskew
+
+morphology_corr <- function(fcb, #takes a flowframe_fcb
+                            uptake = NULL, #get rid of this
+                            channel, #channel name (char)
+                            method = c("earth", "knijnenburg", "lm"), #default to earth
+                            predictors = c('FSC-A', 'SSC-A'), #defaults to FSC/SSC
                             subsample = 20e3,
-                            exp_info = NULL,
-                            ret.model = FALSE,
-                            apply_scales = TRUE,
-                            updateProgress = NULL,
+                          #  exp_info = NULL,
+                            ret.model = TRUE,
+                          #  apply_scales = TRUE,
+                            verbose = FALSE,
                             ...) {
+
+
+  #validation of inputs -------------------------
   methods <- c("earth", "knijnenburg", "lm")
   method_selected <- match.arg1(method, methods)
 
@@ -97,7 +103,7 @@ morphology_corr <- function(fcb,
 
   if(ret.model == TRUE){
    # print(99)
-    return(list(fcb = fcb3[,channel],
+    return(list(fcb = fcb3[,channel], #focus on this:
                 model = fcb.mod))
   } else{
     return(fcb3[,channel])

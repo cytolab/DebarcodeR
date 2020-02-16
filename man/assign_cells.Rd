@@ -4,8 +4,14 @@
 \alias{assign_cells}
 \title{Defines populations on barcoded datasets}
 \usage{
-assign_cells(fcb_df, probs, likelihoodcut = 8, ambiguitycut = 0.02,
-  output = "classif", channel = NULL)
+assign_cells(
+  fcb_df,
+  probs,
+  likelihoodcut = 8,
+  ambiguitycut = 0.02,
+  output = "classif",
+  channel = NULL
+)
 }
 \arguments{
 \item{fcb_df}{dataframe, representing the barcoded data, columns for each channel, rows for each cell}
@@ -27,7 +33,4 @@ a vector of integers from 0:ncol(probs), cells assigned a classification of 0 re
 }
 \description{
 Defines populations on barcoded datasets
-}
-\examples{
-
 }

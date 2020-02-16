@@ -11,4 +11,4 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports: pracma, MASS, scales, flowCore, mixsmsn, sn, classInt, quadprog, earth, dplyr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.0.2
