@@ -2,7 +2,7 @@ deskew_earth <- function(flowFrameFCB,ret.model = FALSE,
                          what = c('x', 'x + se'),
                          nfold = 1,
                          ncross = 0,
-                         channel,
+                         channels,
                          predictors = c('fsc_a', 'ssc_a'),
                          subsample = 30e3,
                          updateProgress = NULL,
@@ -14,15 +14,16 @@ deskew_earth <- function(flowFrameFCB,ret.model = FALSE,
   # uptake sample extracted
   uptake = clean_names(as.data.frame(flowFrameFCB@uptake.ff@exprs))
 
+for (i in 1:length(channels)){
   # making model
   what.options <- c("x", "x + se")
   what <- match.arg(what, what.options)
   print(what)
-  print(channel)
+  print(channels[i])
   if (is.function(updateProgress)) {
     updateProgress(detail = "Training adaptive splines...")}
   lhs <- paste0("`", predictors, "`", collapse = " + ")
-  earth.formula <- paste(channel, '~', lhs)
+  earth.formula <- paste(channels[i], '~', lhs)
   if(what == "x"){
     earth.model <- earth(as.formula(earth.formula),
                          degree = 2,
@@ -35,7 +36,7 @@ deskew_earth <- function(flowFrameFCB,ret.model = FALSE,
 
     if (is.function(updateProgress)) {
       updateProgress(detail = "Fitting fcb data...")}
-    fcb[,channel] <- fcb[,channel] - predict(earth.model, fcb) + median(unlist(uptake[,channel]))
+    fcb[,channels[i]] <- fcb[,channels[i]] - predict(earth.model, fcb) + median(unlist(uptake[,channels[i]]))
 
   } else if(what == "x + se") {
     earth.model <- earth(as.formula(earth.formula),
@@ -48,15 +49,15 @@ deskew_earth <- function(flowFrameFCB,ret.model = FALSE,
                          data = uptake,
                          trace = 0.3)
 
-    fcb[,channel] <- fcb[,channel] - predict(earth.model, fcb) + median(unlist(uptake[,channel]))
-    fcb[,paste0(channel,"se")]<- predict(earth.model, newdata = fcb, interval = "se")
+    fcb[,channels[i]] <- fcb[,channels[i]] - predict(earth.model, fcb) + median(unlist(uptake[,channels[i]]))
+    fcb[,paste0(channels[i],"se")]<- predict(earth.model, newdata = fcb, interval = "se")
 
   }
 
 slot(flowFrameFCB, "barcodes") <- list(list())
-flowFrameFCB@barcodes[[1]]<-list(fcb = fcb[,channel],
+flowFrameFCB@barcodes[[i]]<-list(fcb = fcb[,channels[i]],
      model = earth.model)
-names(flowFrameFCB@barcodes)[[1]]<-channel
+names(flowFrameFCB@barcodes)[[i]]<-channels[i]}
 
 
   if(ret.model == FALSE){
