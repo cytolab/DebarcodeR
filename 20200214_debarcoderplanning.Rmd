@@ -1,0 +1,74 @@
+---
+title: "Debarcoder Planning"
+author: "Benjamin Reisman and Sierra Barone"
+date: "2/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r main debarcoder function}
+create_debarcoded_ff # function that converts a flowframe and uptake.ff to a barcoded.ff with neccessary slots empty
+
+debarcode(barcoded_ff, uptake_ff = NULL,
+          channel, #paco, pacb
+          predictors, #fsc/ssc/ax750, etc...
+          )
+```
+
+```{r debarcoder object}
+#returns a flowset (fully processed)
+list(debarcoded.fs, #the orignal flowframe split into n flowframes for each level,
+     discarded.ff, #discarded cells
+     barcoded.ff, #original ff
+     deskewing = list(deskewed.v, model, input.params)# output from step 1
+     modeling = list(probs.m, fitted.params. input.params) #output from step 
+     assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co)))
+
+#returns a flowframe + bcs ( processed)
+list(
+  debarcoded.ff, #the orignal flowframe split into n flowframes for each level,
+  discarded.ff,#discarded cells
+  barcoded.ff, #original ff
+  bc1 = list(
+    deskewing = list(deskewed.v, model, input.params)# output from step 1
+    modeling = list(probs.m, fitted.params. input.params) #output from step 2
+    assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co))
+  )
+)
+
+list(
+  fcb.ff, #original ff
+  uptake.ff,
+  barcodes = list(
+    bc1 = list(
+      deskewing = list(deskewed.v, model, input.params),# output from step 1
+      modeling = list(probs.m, fitted.params, input.params), #output from step 2
+      assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co))
+    )
+  )
+)
+
+list(
+  fcb.ff, #original ff
+  uptake.ff,
+  barcodes = list(
+    NULL
+    )
+  )
+)
+
+generate_debarcoding_report()
+plot(debarcoded.s3, what = "deskew")
+finalize.bc(debarcoded.s3) #=>flowset
+```
+
+Goals for 2/21/2020
+
+- define the debarcoder object
+- rewrite the deskew function for flowframes
+  - print
+  - plot for deskewing
+  
