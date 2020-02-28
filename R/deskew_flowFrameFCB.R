@@ -20,7 +20,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
                             ret.model = TRUE,
                             verbose = FALSE,
                             updateProgress = NULL,
-                            ...) {
+                            ...){
 
   #validation of inputs -------------------------
   if(!any(class(flowFrameFCB) == "flowFrameFCB")){
@@ -59,6 +59,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       channel = channel,
       fsc_ssc = predictors,
       subsample = subsample,
+      ret.model = ret.model,
       updateProgress = updateProgress
     )
 
@@ -68,14 +69,30 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       uptake = uptake,
       channel = channel,
       predictors = predictors,
+      ret.model = ret.model,
       slope = 1,
       updateProgress = updateProgress
     )
   }
 
-slot(flowFrameFCB, "barcodes") <- list(list())
-flowFrameFCB@barcodes[[1]]<-fcb2
-names(flowFrameFCB@barcodes)[[1]]<-channel
+  if (length(flowFrameFCB@barcodes) == 0){
+    slot(flowFrameFCB, "barcodes") <- list(list())
+    flowFrameFCB@barcodes[[1]] <- fcb2
+    names(flowFrameFCB@barcodes)[[1]] <- channel
+  }else{
+    if (length(which(names(flowFrameFCB@barcodes) == channel)) == 1) {
+      flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]] <- fcb2
+      names(flowFrameFCB@barcodes)[[which(names(flowFrameFCB@barcodes) == channel)]] <-
+        channel
+    }
+    else {
+      flowFrameFCB@barcodes[[(length(flowFrameFCB@barcodes) + 1)]] <-
+        fcb2
+      names(flowFrameFCB@barcodes)[[(length(flowFrameFCB@barcodes))]] <-
+        channel
+    }
+  }
+
 return(flowFrameFCB)
 }
 

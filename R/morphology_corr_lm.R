@@ -15,7 +15,8 @@ morphology_corr.lm <- function(fcb,
                                predictors = NULL,
                                subsample = 10e3,
                                slope = 1,
-                               updateProgress = NULL) {
+                               updateProgress = NULL,
+                               ret.model = FALSE) {
 
   #print(channel)
   if(length(predictors) != 1){
@@ -33,7 +34,7 @@ morphology_corr.lm <- function(fcb,
   fcb[,channel]<- fcb[,channel] - predict(lm.model, newdata = fcb) +   median(unlist(fcb[,channel]))
 
   if(ret.model == FALSE){
-    return(fcb[,channel])
+    return(list(fcb = fcb[,channel]))
   } else{
     return(list(fcb = fcb[,channel],
                 model = lm.model))
