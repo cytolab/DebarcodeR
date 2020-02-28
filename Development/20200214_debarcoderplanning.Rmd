@@ -18,8 +18,8 @@ uptake.ff <- read.FCS("uptake.fcs")
 flowFrameFCB <- flowFrameFCB(barcoded.ff)
 class(flowFrameFCB )
 
-deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,
-                      channel = c("pacific_orange_a"), method = c("knignenburg"))
+deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("fsc_a"),
+                      channel = c("pacific_orange_a"), method = c("lm"))
 ```
 
 ```{r main debarcoder function}

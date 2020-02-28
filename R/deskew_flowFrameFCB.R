@@ -68,25 +68,16 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       uptake = uptake,
       channel = channel,
       predictors = predictors,
-      slopes = 1,
+      slope = 1,
       updateProgress = updateProgress
     )
   }
 
 slot(flowFrameFCB, "barcodes") <- list(list())
-if(ret.model == TRUE){
-  flowFrameFCB@barcodes[[1]]<-fcb2
-  names(flowFrameFCB@barcodes)[[1]]<-channel
-}
-
-#else flowFrameFCB@barcodes[[i]]<-list(fcb = fcb[,channels[i]])
-#names(flowFrameFCB@barcodes)[[i]]<-channels[i]}
+flowFrameFCB@barcodes[[1]]<-fcb2
+names(flowFrameFCB@barcodes)[[1]]<-channel
 return(flowFrameFCB)
 }
-
-
-
-
 
 #' Option selector.
 #'
