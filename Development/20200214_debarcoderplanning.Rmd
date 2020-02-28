@@ -7,6 +7,20 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(flowCore)
+library(debarcoder)
+library(earth)
+library(janitor)
+
+barcoded.ff <- read.FCS("stained.fcs")
+uptake.ff <- read.FCS("uptake.fcs")
+flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
+class(flowFrameFCB )
+
+deskewedFCB <- deskew_earth(flowFrameFCB, ret.model = T, what = "x",
+                      channels = c("pacific_orange_a","pacific_blue_a"))
+
 ```
 
 ```{r main debarcoder function}
