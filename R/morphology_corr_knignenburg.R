@@ -37,7 +37,13 @@ morphology_corr.knignenburg <- function(fcb,
                                            monodir = c(1,1))
   cor.data <- regression.output[[1]]
   fcb[, channel]<- cor.data[, channel]
-  return(fcb)
+
+  if(ret.model == FALSE){
+    return(fcb[,channel])
+  } else{
+    return(list(fcb = fcb[,channel],
+                model = regression.output))
+  }
 }
 
 
