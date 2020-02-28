@@ -2,6 +2,7 @@
 
 export(assign_cells)
 export(deskew_earth)
+export(deskew_flowFrameFCB)
 export(fit_models)
 export(flowFrameFCB)
 export(morphology_corr)

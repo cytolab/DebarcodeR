@@ -22,7 +22,7 @@ doRegressContrained <- function(single_level_bc, fcb_df = NULL,
                                 columns = NULL, monodir = NULL, cofactor = NULL) {
   #print(cofactor)
 
-  print('drc')
+  #print('drc')
   single_level_bc <- as.data.frame(single_level_bc)
   fcb_df <- as.data.frame(fcb_df)
 
@@ -117,7 +117,7 @@ doRegressContrained <- function(single_level_bc, fcb_df = NULL,
     }
 
 
-    print(paste(columns[n], "complete"))
+    #print(paste(columns[n], "complete"))
     data.corr.ls[[n]] <- data.corr
   }
   data.corr.df <- as.data.frame(data.corr.ls)
@@ -328,3 +328,4 @@ constrained_regression <- function(X, Y, fsc_limits, ssc_limits, val3, D,
 
   return(list('NB' = NB, 'Bc' = Bc, 'NOFFSET' = NOFFSET))
 }
+

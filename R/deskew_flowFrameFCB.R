@@ -27,7 +27,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
     stop("Input must be an object of class flowFrameFCB")
   }
 
-  methods <- c("earth", "knijnenburg", "lm")
+  methods <- c("earth", "knignenburg", "lm")
   method_selected <- match.arg1(method, methods)
 
   if (identical(flowFrameFCB@barcoded.ff@exprs,flowFrameFCB@uptake.ff@exprs)==TRUE) {
@@ -52,7 +52,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       ...
     )
 
-  } else if(method_selected == "knijnenburg") {
+  } else if(method_selected == "knignenburg") {
     fcb2 <- morphology_corr.knignenburg(
       fcb = fcb,
       uptake = uptake,
@@ -76,7 +76,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
 slot(flowFrameFCB, "barcodes") <- list(list())
 if(ret.model == TRUE){
   flowFrameFCB@barcodes[[1]]<-fcb2
-  names(flowFrameFCB@barcodes)[[1]]<-channel[i]
+  names(flowFrameFCB@barcodes)[[1]]<-channel
 }
 
 #else flowFrameFCB@barcodes[[i]]<-list(fcb = fcb[,channels[i]])

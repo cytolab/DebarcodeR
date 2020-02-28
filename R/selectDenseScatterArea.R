@@ -29,7 +29,7 @@ selectDenseScatterArea <- function (data,
   area <- 0.95
   FGA <- matrix(0, 2^S, 2^S)
   AP <- matrix(1, 2^S, 2^S)
-  print("31")
+  #print("31")
   N <- nrow(data)
   #as.data.frame(uptake[,'fsc_a'])
 

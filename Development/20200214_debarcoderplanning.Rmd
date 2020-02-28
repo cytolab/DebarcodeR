@@ -15,12 +15,11 @@ library(janitor)
 
 barcoded.ff <- read.FCS("stained.fcs")
 uptake.ff <- read.FCS("uptake.fcs")
-flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
+flowFrameFCB <- flowFrameFCB(barcoded.ff)
 class(flowFrameFCB )
 
-deskewedFCB <- deskew_earth(flowFrameFCB, ret.model = T, what = "x",
-                      channels = c("pacific_orange_a","pacific_blue_a"))
-
+deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,
+                      channel = c("pacific_orange_a"), method = c("knignenburg"))
 ```
 
 ```{r main debarcoder function}
