@@ -9,6 +9,7 @@
 #'
 #' @return a tibble/data.frame with the selected channel corrected for fsc and ssc
 #' @export
+
 morphology_corr.lm <- function(fcb,
                                uptake,
                                channel,
@@ -18,7 +19,6 @@ morphology_corr.lm <- function(fcb,
                                updateProgress = NULL,
                                ret.model = FALSE) {
 
-  #print(channel)
   if(length(predictors) != 1){
     stop('Please select a single predictor')}
 

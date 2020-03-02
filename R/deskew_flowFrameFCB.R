@@ -1,22 +1,22 @@
 #' Corrects morphology based on scatter or uptake control for flowFrameFCB
 #'
-#' @param fcb the barcoded dataframe, post compensation and preprocessing
-#' @param uptake Optional: a dataframe consisting of all cells barcoded with a single level of the barcoding dye
-#' @param channel The name (string) of the channel to be corrected, ie. the column name in 'fcb_df'
+#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe, post compensation and preprocessing
+#' @param channel The name (string) of the channel to be corrected, ie. the column name in flowFrameFCB barcoded.ff exprs
+#' @param method The name of the morphology correction model to use. Choose between earth, lm (linear model), or knignenburg
 #' @param predictors The vector of channel names to be used to build the regression model
 #' @param subsample Integer, number of cells to sample (with replacement) for the morphology correction, defaults to 10,000.
+#' @param ret.model Option to retain the model for deskewing
 #' @param updateProgress used in reactive context (shiny) to return progress information to GUI#'
 #'
-#' @return a tibble/data.frame with the selected channel corrected for fsc and ssc
+#' @return a flowFrameFCB with barcode slots added for selected channel corrected for predictors chosen
 #' @import earth janitor
-#' @export
 #' @export
 
 deskew_flowFrameFCB <- function(flowFrameFCB,
                             channel, #channel name (char)
-                            method = c("earth", "knignenburg", "lm"), #default to earth
-                            predictors = c('fsc_a', 'ssc_a'), #defaults to FSC/SSC
-                            subsample = 30e3,
+                            method = "earth", #default to earth
+                            predictors = c('fsc_a', 'ssc_a'), #defaults to fsc/ssc
+                            subsample = 20e3,
                             ret.model = TRUE,
                             verbose = FALSE,
                             updateProgress = NULL,
@@ -40,6 +40,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
   # uptake sample extracted
   uptake = janitor::clean_names(as.data.frame(flowFrameFCB@uptake.ff@exprs))
 
+  # earth model
   if(method_selected == "earth") {
     fcb2 <- morphology_corr.earth(
       fcb = fcb,
@@ -52,6 +53,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       ...
     )
 
+    # knignenburg model
   } else if(method_selected == "knignenburg") {
     fcb2 <- morphology_corr.knignenburg(
       fcb = fcb,
@@ -63,6 +65,7 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       updateProgress = updateProgress
     )
 
+    # linear model
   }  else if(method_selected == "lm") {
     fcb2 <- morphology_corr.lm(
       fcb = fcb,
@@ -75,21 +78,28 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
     )
   }
 
+  # create barcode slots per channel flowFrameFCB with deskewed and model data
   if (length(flowFrameFCB@barcodes) == 0){
-    slot(flowFrameFCB, "barcodes") <- list(list())
-    flowFrameFCB@barcodes[[1]] <- fcb2
+    slot(flowFrameFCB, "barcodes") <- list(list(list()))
+    flowFrameFCB@barcodes[[1]][[1]] <- fcb2
     names(flowFrameFCB@barcodes)[[1]] <- channel
+    names(flowFrameFCB@barcodes[[1]]) <- "deskewing"
   }else{
     if (length(which(names(flowFrameFCB@barcodes) == channel)) == 1) {
-      flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]] <- fcb2
+      flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][[1]] <- fcb2
       names(flowFrameFCB@barcodes)[[which(names(flowFrameFCB@barcodes) == channel)]] <-
         channel
+      names(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]) <-
+        "deskewing"
     }
     else {
       flowFrameFCB@barcodes[[(length(flowFrameFCB@barcodes) + 1)]] <-
-        fcb2
+        list(fcb2)
       names(flowFrameFCB@barcodes)[[(length(flowFrameFCB@barcodes))]] <-
         channel
+      names((flowFrameFCB@barcodes)[[(length(flowFrameFCB@barcodes))]]) <-
+        "deskewing"
+
     }
   }
 
@@ -103,6 +113,7 @@ return(flowFrameFCB)
 #'
 #' @return returns the first choice is no choice is made, otherwise returns
 #'  a the choice, or an error if the choice was invaldi
+
 match.arg1 <- function (arg, choices)
 {
   if (missing(choices)) {
@@ -123,6 +134,3 @@ match.arg1 <- function (arg, choices)
     stop("there is more than one match in match.arg")
   choices[i]
 }
-
-
-

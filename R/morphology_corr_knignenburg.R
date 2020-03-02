@@ -10,7 +10,7 @@
 #'
 #' @seealso \code{\link{selectDenseScatterArea}} \code{\link{doRegressConstrained}}
 #' @export
-#'
+
 morphology_corr.knignenburg <- function(fcb,
                                         uptake,
                                         channel,

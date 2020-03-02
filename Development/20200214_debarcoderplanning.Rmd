@@ -5,9 +5,7 @@ date: "2/14/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+```{r test}
 library(flowCore)
 library(debarcoder)
 library(earth)
@@ -15,11 +13,10 @@ library(janitor)
 
 barcoded.ff <- read.FCS("stained.fcs")
 uptake.ff <- read.FCS("uptake.fcs")
-flowFrameFCB <- flowFrameFCB(barcoded.ff)
+flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
 class(flowFrameFCB )
 
-deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("fsc_a"),
-                      channel = c("pacific_orange_a"), method = c("lm"))
+deskewedFCB <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("knignenburg"))
 ```
 
 ```{r main debarcoder function}
