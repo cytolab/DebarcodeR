@@ -11,7 +11,8 @@ morphology_corr.lm(
   predictors = NULL,
   subsample = 10000,
   slope = 1,
-  updateProgress = NULL
+  updateProgress = NULL,
+  ret.model = FALSE
 )
 }
 \arguments{

@@ -10,7 +10,8 @@ morphology_corr.knignenburg(
   channel,
   fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"),
   subsample = 10000,
-  updateProgress = NULL
+  updateProgress = NULL,
+  ret.model = FALSE
 )
 }
 \arguments{

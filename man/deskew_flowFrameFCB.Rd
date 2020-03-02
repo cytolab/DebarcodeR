@@ -7,9 +7,9 @@
 deskew_flowFrameFCB(
   flowFrameFCB,
   channel,
-  method = c("earth", "knignenburg", "lm"),
+  method = "earth",
   predictors = c("fsc_a", "ssc_a"),
-  subsample = 30000,
+  subsample = 20000,
   ret.model = TRUE,
   verbose = FALSE,
   updateProgress = NULL,
@@ -17,20 +17,22 @@ deskew_flowFrameFCB(
 )
 }
 \arguments{
-\item{channel}{The name (string) of the channel to be corrected, ie. the column name in 'fcb_df'}
+\item{flowFrameFCB}{a flowFrameFCB object with barcoded flowframe and uptake flowframe, post compensation and preprocessing}
+
+\item{channel}{The name (string) of the channel to be corrected, ie. the column name in flowFrameFCB barcoded.ff exprs}
+
+\item{method}{The name of the morphology correction model to use. Choose between earth, lm (linear model), or knignenburg}
 
 \item{predictors}{The vector of channel names to be used to build the regression model}
 
 \item{subsample}{Integer, number of cells to sample (with replacement) for the morphology correction, defaults to 10,000.}
 
+\item{ret.model}{Option to retain the model for deskewing}
+
 \item{updateProgress}{used in reactive context (shiny) to return progress information to GUI#'}
-
-\item{fcb}{the barcoded dataframe, post compensation and preprocessing}
-
-\item{uptake}{Optional: a dataframe consisting of all cells barcoded with a single level of the barcoding dye}
 }
 \value{
-a tibble/data.frame with the selected channel corrected for fsc and ssc
+a flowFrameFCB with barcode slots added for selected channel corrected for predictors chosen
 }
 \description{
 Corrects morphology based on scatter or uptake control for flowFrameFCB
