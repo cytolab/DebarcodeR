@@ -95,9 +95,9 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
     else {
       flowFrameFCB@barcodes[[(length(flowFrameFCB@barcodes) + 1)]] <-
         list(fcb2)
-      names(flowFrameFCB@barcodes)[[(length(flowFrameFCB@barcodes))]] <-
+      names(flowFrameFCB@barcodes)[[length(flowFrameFCB@barcodes)]] <-
         channel
-      names((flowFrameFCB@barcodes)[[(length(flowFrameFCB@barcodes))]]) <-
+      names(flowFrameFCB@barcodes[[length(flowFrameFCB@barcodes)]]) <-
         "deskewing"
 
     }
