@@ -3,15 +3,17 @@
 #'This function allows you to calculate the probability of a cell originating from a given population using
 #'either gaussian mixture modeling or jenks natural breaks classification
 #'
-#' @param vec a vector of barcode intensities, usually post morphology correction
+#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing (at least one barcodes slot filled)
+#' @param channel The name (string) of the channel to be clustered
+#' @param ret.model Option to retain the model for deskewing
+#' @param updateProgress used in reactive context (shiny) to return progress information to GUI
 #' @param levels integer, the number of barcoding intensities present in the vector
 #' @param opt string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization
 #' @param dist string in c("normal, skew.Normal, Tdist"), passed to mixsmsn
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
 #' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)
-#' @param updateProgress used in reactive context (shiny) to return progress information to GUI
 #'
-#' @return a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
+#' @return a flowFrameFCB with deskewed barcodes slot and clustering slot with a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
 #' If gaussian mixture modeling is used the probailities correspond to the probability
 #' of the cell originaiting that level under the distrubtion specified by the mixture model
 #' If jenks natural breaks optimization is used, the probability is estimated empirically based on a histogram
@@ -20,13 +22,11 @@
 #' @export
 #' @import classInt mixsmsn sn
 
-
 # aspirational --> v2?
 # find sd and mean of uptake - use for probabilities
 # bounds as 5th and 95th, separation of each level --> find probability
 # uptake for two channels - use as model (Prior)
 # READ smsn.mix paper and function
-
 
 cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_flowFrameFCB
                        channel, #channel name (char)
@@ -35,7 +35,8 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
                        dist = NULL, #for gaussian mixture models, Skew.normal, normal, T.dist
                        subsample = 10e3,
                        trim = 0,
-                       updateProgress = NULL){#cofactor for asinh transofrmation
+                       ret.model = TRUE,
+                       updateProgress = NULL){
 
 
   # match.arg1 here for options and distributions (normal, skew.normal) - dist and opt
@@ -43,12 +44,14 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
     stop("Input must be an object of class flowFrameFCB")
   }
 
-  if (length(flowFrameFCB) == 0){
-    stop("Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB) ")
+  if (length(flowFrameFCB@barcodes) == 0) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+    )
   }
 
 
-  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]
+ vec =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["deskewing"]][["values"]]
 
   quantiles <- quantile(vec, c(trim/2, 1- trim/2))
   vec.trim <- vec[quantiles[1] < vec & quantiles[2] > vec]
@@ -59,7 +62,7 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
     if (levels > 1) {
       mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")   #fisher-jenks (breaks in data)
       classif <- sapply(vecss, function(x) pracma::findintervals(x, mod.int$brks))
-      classif <- levels + 1 - classif
+      classif <- levels + 1 - unlist(classif)
       mu.i <- as.numeric(unlist(lapply(split(vecss, classif), median))[-1])
     }
     if (is.function(updateProgress)) {
@@ -116,14 +119,18 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
 
   }
 
-  return(probs.scaled.df)
+  if(ret.model == FALSE){
+    flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df)
+    names(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]])[2] <-
+      "clustering"
+  } else{
+    flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df, model = Snorm.analysis)
+    names(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]])[2] <-
+      "clustering"
+  }
+  return(flowFrameFCB)
 }
-
-
 
 # plot as histogram and show fit overlay (Ben has code?)
 # overlay gaussian fit on histogram
 # look at colored count vs PO plot or count vs PB plot
-
-
-

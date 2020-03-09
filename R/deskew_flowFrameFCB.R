@@ -6,7 +6,7 @@
 #' @param predictors The vector of channel names to be used to build the regression model
 #' @param subsample Integer, number of cells to sample (with replacement) for the morphology correction, defaults to 10,000.
 #' @param ret.model Option to retain the model for deskewing
-#' @param updateProgress used in reactive context (shiny) to return progress information to GUI#'
+#' @param updateProgress used in reactive context (shiny) to return progress information to GUI
 #'
 #' @return a flowFrameFCB with barcode slots added for selected channel corrected for predictors chosen
 #' @import earth janitor

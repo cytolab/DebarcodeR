@@ -1,0 +1,74 @@
+#' Defines populations on barcoded datasets
+#'
+#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing and clustering (at least one barcodes slot filled)
+#' @param channel The name (string) of the channel that has been corrected and clustered
+#' @param likelihoodcut numeric, a likelihood cutoff for discarding unlikely cells, less than 1/k as likely as the most likely cell from that population
+#' @param ambiguitycut numeric from 0 to 1, threshhold below which to discard ambigious cells, eg: 0.02,
+#'  discards cells with more than 2% chance of originating from another population
+#' @param output string, default "classif," also "plot;" what to return?
+#' @param channel string, channel which is barcoded, only needed if output == "plot"
+#'
+#' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
+#'  otherwise number corresponds to the barcoding level assignment of that cell
+#' @export
+
+assign_flowFrameFCB <- function(flowFrameFCB,
+                                channel,
+                                likelihoodcut = 8 ,
+                                ambiguitycut = 0.02){
+
+  if (!any(class(flowFrameFCB) == "flowFrameFCB")) {
+    stop("Input must be an object of class flowFrameFCB")
+  }
+
+  if (length(flowFrameFCB@barcodes) == 0) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+    )
+  }
+
+  if (length(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]) == 1) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
+    )
+  }
+
+  probs =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["clustering"]][["probabilities"]]
+
+
+  row.max <-  apply(probs, 1, sum)
+  probs.norm.row <- sweep(probs, 1, row.max, FUN="/")
+
+  col.max <-  apply(probs, 2, max)
+  probs.norm.col <- sweep(probs, 2, col.max, FUN="/")
+
+  classif <- rep(0, nrow(flowFrameFCB@barcoded.ff))
+
+  if(ncol(probs) > 1) { # if assigning more than one level
+    classif <- as.numeric(apply(probs.norm.row, 1, which.max))
+  } else { # if assigning only one level
+    classif <- rep(1, nrow(probs))
+  }
+
+  classif[which(is.na(classif))] <- 0 #catches the few cells with 0 probability of belonging to any pop
+  likely <- probs.norm.col > 1/likelihoodcut
+
+  if(ncol(probs) > 1) { # if assigning more than one level
+    likely.sum <- apply(likely, 1, sum) #converts logical to numeric
+    print(paste0(round(sum(apply(likely, 1, any))/nrow(likely)*100, 3), "% above likelihood cutoff"))
+    classif[which(likely.sum < 1)] <- 0
+    non.ambigious <- apply(probs.norm.row, 1, max) > (1 - ambiguitycut)
+    classif[which(!non.ambigious)] <- 0
+  } else {
+    likely.sum <- as.numeric(likely)
+    classif[which(likely.sum != 1)] <- 0
+  }
+
+  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][[3]] <- list(values = classif,
+                                                                                       ambiguity = ambiguitycut,
+                                                                                       likelihood = likelihoodcut)
+  names(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]])[3] <-
+    "assignment"
+
+  return(flowFrameFCB)
+}

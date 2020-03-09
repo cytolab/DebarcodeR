@@ -16,31 +16,35 @@ uptake.ff <- read.FCS("uptake.fcs")
 flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
 class(flowFrameFCB )
 
-deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("ssc_a"), channel = c("pacific_blue_a"), method = c("lm"))
+deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("earth"))
 
-deskewedFCB1 <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("earth"))
+deskewedFCB1 <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_orange_a"), method = c("earth"))
+
+clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 8, opt = "mixture", dist = "Skew.normal")
+
+assignment <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") ,likelihoodcut = 8,ambiguitycut = 0.02)
 
 # unlist for fcb in case it returns vector 
 # name for channel to recognize pacific blue regardless of case and spaces 
 # have user select channel 
 # find closest match for ssc,fsc, pb, po, etc
-
-# barcodes slot --> "clustering" (fitting models) -- fit models function
-
-# rewrite fit_models
 ```
 
 ```{r main debarcoder function}
-create_debarcoded_ff # function that converts a flowframe and uptake.ff to a barcoded.ff with neccessary slots empty
+#create_debarcoded_ff # function that converts a flowframe and uptake.ff to a barcoded.ff with neccessary slots empty
+
+hist(flowFrameFCB@barcoded.ff@exprs[,11], n= 500)
 
 # 1
-deskew(barcoded_ff, uptake_ff = NULL,
-          channel, #paco, pacb
-          predictors, #fsc/ssc/ax750, etc...
-          )
+#deskew(barcoded_ff, uptake_ff = NULL,
+#          channel, #paco, pacb
+#          predictors, #fsc/ssc/ax750, etc...
+#          )
+
+hist(deskewedFCB@barcodes$pacific_blue_a$deskewing$values, n = 500)
 
 # 2
-cluster()/fit_models()
+#cluster()/fit_models()
 # return list of probs and model parameters/inputs
 
 # function that takes prob matrix and returns ambiguity and uncertainity 
@@ -75,7 +79,7 @@ list(
   barcodes = list(
     bc1 = list(
       deskewing = list(deskewed.v, model, input.params),# output from step 1
-      modeling = list(probs.m, fitted.params, input.params), #output from step 2
+      clustering = list(probs.m, fitted.params, input.params), #output from step 2
       assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co))
     )
   )
