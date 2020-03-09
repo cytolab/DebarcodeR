@@ -21,7 +21,7 @@ deskew_flowFrameFCB(
 
 \item{channel}{The name (string) of the channel to be corrected, ie. the column name in flowFrameFCB barcoded.ff exprs}
 
-\item{method}{The name of the morphology correction model to use. Choose between earth, lm (linear model), or knignenburg}
+\item{method}{The name of the morphology correction model to use. Choose between earth, lm (linear model), or knijnenburg}
 
 \item{predictors}{The vector of channel names to be used to build the regression model}
 

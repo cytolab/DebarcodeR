@@ -11,7 +11,7 @@
 #' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
 #'  otherwise number corresponds to the barcoding level assignment of that cell
 #' @export
-assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,
+assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,   # pass vector of ambiguity cutoffs?
                          output = "classif", channel = NULL){
 
 
@@ -52,9 +52,24 @@ assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,
     classif[which(likely.sum != 1)] <- 0
   }
 
-  if(output == "classif") {
+  if(output == "classif") {  #classif = vectcor of assignments
     return(classif)
   } else {
+
+
+
+   # remove plotting from assign function
+
+
+    ### PLOT IDEAS
+    # plot distribution -->
+    # yield on y like nolan lab debarcoder (look for each level, line = level)
+        # plot for ambiguity cutoff
+        # plot for likelihood
+
+
+
+
    # print("reached 61")
     vec <- fcb_df[,channel]
     plot_df <- data.frame(vec = fcb_df[,channel], classif = factor(classif))

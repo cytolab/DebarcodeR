@@ -1,62 +1,60 @@
 #' Defines populations on barcoded datasets
 #'
 #'This function allows you to calculate the probability of a cell originating from a given population using
-#'either gaussian mixture modeling or jenks natural breaks classificatio.n
+#'either gaussian mixture modeling or jenks natural breaks classification
 #'
 #' @param vec a vector of barcode intensities, usually post morphology correction
 #' @param levels integer, the number of barcoding intensities present in the vector
 #' @param opt string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization
 #' @param dist string in c("normal, skew.Normal, Tdist"), passed to mixsmsn
-#' @param trans string, transformation to apply to the barcoding channels, defaults to arcsinh, also log10
-#' @param cofactor Numeirc, Cofactor used for the arcsinh transformation on vec
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
 #' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)
 #' @param updateProgress used in reactive context (shiny) to return progress information to GUI
-#'
 #'
 #' @return a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
 #' If gaussian mixture modeling is used the probailities correspond to the probability
 #' of the cell originaiting that level under the distrubtion specified by the mixture model
 #' If jenks natural breaks optimization is used, the probability is estimated empirically based on a histogram
 #'
-#' @seealso \code{\link{morphology_corr}}
+#' @seealso \code{\link{deskew_flowFrameFCB}}
 #' @export
 #' @import classInt mixsmsn sn
-#'
 
 
 # aspirational --> v2?
 # find sd and mean of uptake - use for probabilities
 # bounds as 5th and 95th, separation of each level --> find probability
 # uptake for two channels - use as model (Prior)
+# READ smsn.mix paper and function
 
 
-fit_models <- function(vec, #vector of barcoding intensities, output of morphology.corr
+cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_flowFrameFCB
+                       channel, #channel name (char)
                        levels, #number of levels
                        opt = "mixture", #mixture (guassian mixture models) or fisher (univariate k-means)
-
-                       # match.arg1 here for options and distributions (normal, skew.normal) - dist and opt
-
                        dist = NULL, #for gaussian mixture models, Skew.normal, normal, T.dist
-                       trans = "arcsinh", #asinh or log10
-                       cofactor = NULL,
                        subsample = 10e3,
                        trim = 0,
                        updateProgress = NULL){#cofactor for asinh transofrmation
 
-  if (trans == "log10"){
-    vec <- log10(vec)
-  } else if (trans == "arcsinh"){
-    vec <- asinh(vec/cofactor)
+
+  # match.arg1 here for options and distributions (normal, skew.normal) - dist and opt
+  if(!any(class(flowFrameFCB) == "flowFrameFCB")){
+    stop("Input must be an object of class flowFrameFCB")
   }
+
+  if (length(flowFrameFCB) == 0){
+    stop("Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB) ")
+  }
+
+
+  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]
 
   quantiles <- quantile(vec, c(trim/2, 1- trim/2))
   vec.trim <- vec[quantiles[1] < vec & quantiles[2] > vec]
   vecss <- sample(vec.trim, subsample, replace = TRUE)
 
   if(opt == "mixture") {
-    #cofactor <- 150
-
 
     if (levels > 1) {
       mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")   #fisher-jenks (breaks in data)
@@ -67,21 +65,10 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
     if (is.function(updateProgress)) {
       updateProgress(detail = "Optimizing Mixture Model")
     }
-    # dist <- "Skew.normal"
-    # levels <- 4
-    # ?mixsmsn::smsn.mix
-    # ptm <- proc.time()
+
     Snorm.analysis <- mixsmsn::smsn.mix(vecss, nu = 3, g = levels, criteria = TRUE,
                                         get.init = TRUE, group = TRUE, family = dist, calc.im = FALSE, obs.prob = TRUE,
                                         kmeans.param = list(iter.max = 20, n.start = 10, algorithm = "Hartigan-Wong"))   #sigma 2 parameter = mu.i
-
-                                    #inputs for this function (criteria)
-                                    #READ smsn.mix paper and function
-
-
-    # proc.time() - ptm
-    # mix.hist(vecss, Snorm.analysis, breaks = 50)
-    # (Snorm.analysis)
 
     loc <- Snorm.analysis$mu
     scale <- sqrt(Snorm.analysis$sigma2)
@@ -94,16 +81,13 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
       probs[,as.character(i)] <- sn::dsn(vec, dp = as.numeric(Snorm.df[i,]))
     }
 
-    #print(str(probs))
-
     if(levels > 1) {
       probs.scaled <- apply(probs[,-1], 1, function(vec) { vec * Snorm.analysis$pii})
-      probs.scaled.df <- as.data.frame(t(probs.scaled))[,rev(order(loc))] #order(loc) reorders the columns in descending order
+      probs.scaled.df <- as.data.frame(t(probs.scaled))[,rev(order(loc))]
     } else {
       probs.scaled <- probs[,-1]
       probs.scaled.df <- as.data.frame(probs.scaled)
     }
-
 
   } else if(opt == "fisher") {
     mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")
@@ -114,25 +98,6 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
 
     classif <- levels + 1 - classif
     classif[classif > levels] <- 0
-
-
-    # ggplot(max(vec.split[[2]]))
-    # preplot <-ggplot(data.frame(x = vec.split[[3]]), aes(x = x)) +
-    #   geom_histogram(bins = 100, col = "black", fill = "grey99") +
-    #   geom_vline(data = data.frame(x = mod.int$brks), aes(xintercept = x),
-    #              linetype = 2, size = 1)
-    # preplot <- ggplot_build(preplot)
-    # preplot$data[[1]][["count"]]
-    # ggplot(data.frame(x = vec.split[[3]]), aes(x = x)) +
-    #   geom_histogram(bins = 100, col = "black", fill = "grey99") +
-    #   geom_vline(data = data.frame(x = mod.int$brks), aes(xintercept = x),
-    #              linetype = 2, size = 1) +
-    #   geom_hline(yintercept = max(preplot$data[[1]][["count"]])/8,
-    #              linetype = 4, size = 1, col = "blue") +
-    #   theme_classic()
-
-    #calculate the empircal probability for each cell belonging to each
-    #population based on the histogram
 
     vec.split <- split(vec, classif)
 
@@ -151,18 +116,6 @@ fit_models <- function(vec, #vector of barcoding intensities, output of morpholo
 
   }
 
-  if (levels > 1) {
-   # colMax <- apply(probs.scaled.df, 2, max)
-    #print(str(colMax))
-   # rowMax <- apply(probs.scaled.df, 1, max)
-    #print(str(rowMax))
-    #probs.rescale.col <- sweep(probs.scaled.df, 2, colMax, FUN="/")
-    #probs.rescale.row <- sweep(probs.scaled.df, 1, rowMax, FUN="/")
-
-  } else {
-   # colMax <- max(probs.scaled.df)
-   # probs.rescale.col <- probs.scaled.df/colMax
-  }
   return(probs.scaled.df)
 }
 

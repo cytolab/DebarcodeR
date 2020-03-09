@@ -16,39 +16,59 @@ uptake.ff <- read.FCS("uptake.fcs")
 flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
 class(flowFrameFCB )
 
-deskewedFCB <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("knignenburg"))
+deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("ssc_a"), channel = c("pacific_blue_a"), method = c("lm"))
+
+deskewedFCB1 <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("earth"))
+
+# unlist for fcb in case it returns vector 
+# name for channel to recognize pacific blue regardless of case and spaces 
+# have user select channel 
+# find closest match for ssc,fsc, pb, po, etc
+
+# barcodes slot --> "clustering" (fitting models) -- fit models function
+
+# rewrite fit_models
 ```
 
 ```{r main debarcoder function}
 create_debarcoded_ff # function that converts a flowframe and uptake.ff to a barcoded.ff with neccessary slots empty
 
-debarcode(barcoded_ff, uptake_ff = NULL,
+# 1
+deskew(barcoded_ff, uptake_ff = NULL,
           channel, #paco, pacb
           predictors, #fsc/ssc/ax750, etc...
           )
+
+# 2
+cluster()/fit_models()
+# return list of probs and model parameters/inputs
+
+# function that takes prob matrix and returns ambiguity and uncertainity 
+# norm by row, col
+# 2 functions (1 for row, 1 for col)
+
+# 3 
+assign()
+# call prior function for cutoffs 
+# take FlowFrameFCB as input
+# return list of assignment (vector)
+
+# 4 
+# levels to naming files
+# split.flowframeFCB(flowFrameFCB, platemap) --> return(FlowSet with og file name & "label"/"level") generic function to split
+
+# pass labels, append to levels
+# lookup table
+# csv table for levels and names
+# platemap = csv template
+# read in file and assign/label/match
+
+# plots for cutoffs and distributions 
+# reprex for example data set (reproducible)
+# load barcoded flowFrame
 ```
 
 ```{r debarcoder object}
-#returns a flowset (fully processed)
-list(debarcoded.fs, #the orignal flowframe split into n flowframes for each level,
-     discarded.ff, #discarded cells
-     barcoded.ff, #original ff
-     deskewing = list(deskewed.v, model, input.params)# output from step 1
-     modeling = list(probs.m, fitted.params. input.params) #output from step 
-     assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co)))
-
-#returns a flowframe + bcs ( processed)
-list(
-  debarcoded.ff, #the orignal flowframe split into n flowframes for each level,
-  discarded.ff,#discarded cells
-  barcoded.ff, #original ff
-  bc1 = list(
-    deskewing = list(deskewed.v, model, input.params)# output from step 1
-    modeling = list(probs.m, fitted.params. input.params) #output from step 2
-    assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co))
-  )
-)
-
 list(
   fcb.ff, #original ff
   uptake.ff,
@@ -61,24 +81,7 @@ list(
   )
 )
 
-list(
-  fcb.ff, #original ff
-  uptake.ff,
-  barcodes = list(
-    NULL
-    )
-  )
-)
-
 generate_debarcoding_report()
 plot(debarcoded.s3, what = "deskew")
 finalize.bc(debarcoded.s3) #=>flowset
 ```
-
-Goals for 2/21/2020
-
-- define the debarcoder object
-- rewrite the deskew function for flowframes
-  - print
-  - plot for deskewing
-  
