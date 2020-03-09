@@ -60,9 +60,9 @@ morphology_corr.earth <- function(fcb,
   }
 
   if(ret.model == FALSE){
-    return(list(fcb = fcb[,channel]))
+    return(list(values = fcb[,channel]))
   } else{
-    return(list(fcb = fcb[,channel],
+    return(list(values = fcb[,channel],
                 model = earth.model))
   }
 }

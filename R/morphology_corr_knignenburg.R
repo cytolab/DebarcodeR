@@ -11,7 +11,7 @@
 #' @seealso \code{\link{selectDenseScatterArea}} \code{\link{doRegressConstrained}}
 #' @export
 
-morphology_corr.knignenburg <- function(fcb,
+morphology_corr.knijnenburg <- function(fcb,
                                         uptake,
                                         channel,
                                         fsc_ssc = c(fsc = 'FSC-A', ssc = 'SSC-A'),
@@ -44,9 +44,9 @@ morphology_corr.knignenburg <- function(fcb,
   fcb[, channel] <- cor.data[, channel]
 
   if (ret.model == FALSE) {
-    return(list(fcb = fcb[, channel]))
+    return(list(values = fcb[, channel]))
   } else{
-    return(list(fcb = fcb[, channel],
+    return(list(values = fcb[, channel],
                 model = regression.output))
   }
 }

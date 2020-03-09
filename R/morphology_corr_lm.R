@@ -34,9 +34,9 @@ morphology_corr.lm <- function(fcb,
   fcb[,channel]<- fcb[,channel] - predict(lm.model, newdata = fcb) +   median(unlist(fcb[,channel]))
 
   if(ret.model == FALSE){
-    return(list(fcb = fcb[,channel]))
+    return(list(values = fcb[,channel]))
   } else{
-    return(list(fcb = fcb[,channel],
+    return(list(values = fcb[,channel],
                 model = lm.model))
   }
 }
