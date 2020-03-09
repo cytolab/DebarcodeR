@@ -12,10 +12,15 @@ cluster_flowFrameFCB(
   dist = NULL,
   subsample = 10000,
   trim = 0,
+  ret.model = TRUE,
   updateProgress = NULL
 )
 }
 \arguments{
+\item{flowFrameFCB}{a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing (at least one barcodes slot filled)}
+
+\item{channel}{The name (string) of the channel to be corrected}
+
 \item{levels}{integer, the number of barcoding intensities present in the vector}
 
 \item{opt}{string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization}
@@ -26,12 +31,12 @@ cluster_flowFrameFCB(
 
 \item{trim}{numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)}
 
-\item{updateProgress}{used in reactive context (shiny) to return progress information to GUI}
+\item{ret.model}{Option to retain the model for deskewing}
 
-\item{vec}{a vector of barcode intensities, usually post morphology correction}
+\item{updateProgress}{used in reactive context (shiny) to return progress information to GUI}
 }
 \value{
-a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
+a flowFrameFCB with deskewed barcodes slot and clustering slot with a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
 If gaussian mixture modeling is used the probailities correspond to the probability
 of the cell originaiting that level under the distrubtion specified by the mixture model
 If jenks natural breaks optimization is used, the probability is estimated empirically based on a histogram

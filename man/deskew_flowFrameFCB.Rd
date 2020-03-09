@@ -29,7 +29,7 @@ deskew_flowFrameFCB(
 
 \item{ret.model}{Option to retain the model for deskewing}
 
-\item{updateProgress}{used in reactive context (shiny) to return progress information to GUI#'}
+\item{updateProgress}{used in reactive context (shiny) to return progress information to GUI}
 }
 \value{
 a flowFrameFCB with barcode slots added for selected channel corrected for predictors chosen
