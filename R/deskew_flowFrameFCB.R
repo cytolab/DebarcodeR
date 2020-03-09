@@ -2,7 +2,7 @@
 #'
 #' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe, post compensation and preprocessing
 #' @param channel The name (string) of the channel to be corrected, ie. the column name in flowFrameFCB barcoded.ff exprs
-#' @param method The name of the morphology correction model to use. Choose between earth, lm (linear model), or knignenburg
+#' @param method The name of the morphology correction model to use. Choose between earth, lm (linear model), or knijnenburg
 #' @param predictors The vector of channel names to be used to build the regression model
 #' @param subsample Integer, number of cells to sample (with replacement) for the morphology correction, defaults to 10,000.
 #' @param ret.model Option to retain the model for deskewing
@@ -27,12 +27,12 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
     stop("Input must be an object of class flowFrameFCB")
   }
 
-  methods <- c("earth", "knignenburg", "lm")
+  methods <- c("earth", "knijnenburg", "lm")
   method_selected <- match.arg1(method, methods)
 
   if (identical(flowFrameFCB@barcoded.ff@exprs,flowFrameFCB@uptake.ff@exprs)==TRUE) {
     warning("Barcoded sample being used as uptake control,
-            `knignenburg` method may provide best results'")
+            `knijnenburg` method may provide best results'")
   }
 
   # fcb sample extracted
@@ -53,9 +53,9 @@ deskew_flowFrameFCB <- function(flowFrameFCB,
       ...
     )
 
-    # knignenburg model
-  } else if(method_selected == "knignenburg") {
-    fcb2 <- morphology_corr.knignenburg(
+    # knijnenburg model
+  } else if(method_selected == "knijnenburg") {
+    fcb2 <- morphology_corr.knijnenburg(
       fcb = fcb,
       uptake = uptake,
       channel = channel,
