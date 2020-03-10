@@ -9,7 +9,7 @@
 #' @param updateProgress used in reactive context (shiny) to return progress information to GUI
 #' @param levels integer, the number of barcoding intensities present in the vector
 #' @param opt string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization
-#' @param dist string in c("normal, skew.Normal, Tdist"), passed to mixsmsn
+#' @param dist string in c("Normal, Skew.normal, Tdist"), passed to mixsmsn
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
 #' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)
 #'
@@ -50,6 +50,12 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
     )
   }
 
+  options <- c("mixture","fisher")
+  opt_selected <- match.arg1(opt, options)
+
+  distributions <- c("normal","Skew.normal","Tdist")
+  dist_selected <- match.arg1(dist, distributions)
+
 
  vec =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["deskewing"]][["values"]]
 
@@ -57,7 +63,7 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
   vec.trim <- vec[quantiles[1] < vec & quantiles[2] > vec]
   vecss <- sample(vec.trim, subsample, replace = TRUE)
 
-  if(opt == "mixture") {
+  if(opt_selected == "mixture") {
 
     if (levels > 1) {
       mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")   #fisher-jenks (breaks in data)
@@ -71,7 +77,7 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
     }
 
     Snorm.analysis <- mixsmsn::smsn.mix(vecss, nu = 3, g = levels, criteria = TRUE,
-                                        get.init = TRUE, group = TRUE, family = dist, calc.im = FALSE, obs.prob = TRUE,
+                                        get.init = TRUE, group = TRUE, family = dist_selected, calc.im = FALSE, obs.prob = TRUE,
                                         kmeans.param = list(iter.max = 20, n.start = 10, algorithm = "Hartigan-Wong"))   #sigma 2 parameter = mu.i
 
     loc <- Snorm.analysis$mu
@@ -93,7 +99,7 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
       probs.scaled.df <- as.data.frame(probs.scaled)
     }
 
-  } else if(opt == "fisher") {
+  } else if(opt_selected == "fisher") {
     mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")
 
     classif <- lapply(vec, FUN = function(x) {findInterval(x, mod.int$brks)})

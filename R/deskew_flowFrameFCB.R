@@ -128,7 +128,7 @@ match.arg1 <- function (arg, choices)
     return(choices[1])
   i <- pmatch(arg, choices)
   if (is.na(i))
-    stop(paste("Method should be one of", paste(choices, collapse = ", "),
+    stop(paste("Choice should be one of", paste(choices, collapse = ", "),
                sep = " "))
   if (length(i) > 1)
     stop("there is more than one match in match.arg")
