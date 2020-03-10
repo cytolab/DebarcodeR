@@ -1,15 +1,16 @@
 #' Defines populations on barcoded datasets
 #'
-#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing and clustering (at least one barcodes slot filled)
+#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing
+#' and clustering (at least one barcodes slot filled)
 #' @param channel The name (string) of the channel that has been corrected and clustered
-#' @param likelihoodcut numeric, a likelihood cutoff for discarding unlikely cells, less than 1/k as likely as the most likely cell from that population
+#' @param likelihoodcut numeric, a likelihood cutoff for discarding unlikely cells, less than 1/k as likely
+#' as the most likely cell from that population
 #' @param ambiguitycut numeric from 0 to 1, threshhold below which to discard ambigious cells, eg: 0.02,
 #'  discards cells with more than 2% chance of originating from another population
-#' @param output string, default "classif," also "plot;" what to return?
-#' @param channel string, channel which is barcoded, only needed if output == "plot"
-#'
-#' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
-#'  otherwise number corresponds to the barcoding level assignment of that cell
+
+#' @return a flowFrameFCB object with a barcode slot filled with deskewing, clustering, cell assignment as
+#' a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
+#' otherwise number corresponds to the barcoding level assignment of that cell
 #' @export
 
 assign_flowFrameFCB <- function(flowFrameFCB,

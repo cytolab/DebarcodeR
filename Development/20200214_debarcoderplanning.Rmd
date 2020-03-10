@@ -1,7 +1,7 @@
 ---
 title: "Debarcoder Planning"
 author: "Benjamin Reisman and Sierra Barone"
-date: "2/14/2020"
+date: "03/09/2020"
 output: html_document
 ---
 
@@ -23,39 +23,18 @@ deskewedFCB1 <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("f
 clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 8, opt = "mixture", dist = "Skew.normal")
 
 assignment <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") ,likelihoodcut = 8,ambiguitycut = 0.02)
-
-# unlist for fcb in case it returns vector 
-# name for channel to recognize pacific blue regardless of case and spaces 
-# have user select channel 
-# find closest match for ssc,fsc, pb, po, etc
 ```
 
-```{r main debarcoder function}
-#create_debarcoded_ff # function that converts a flowframe and uptake.ff to a barcoded.ff with neccessary slots empty
-
+```{r some plots}
 hist(flowFrameFCB@barcoded.ff@exprs[,11], n= 500)
-
-# 1
-#deskew(barcoded_ff, uptake_ff = NULL,
-#          channel, #paco, pacb
-#          predictors, #fsc/ssc/ax750, etc...
-#          )
-
 hist(deskewedFCB@barcodes$pacific_blue_a$deskewing$values, n = 500)
-
-# 2
-#cluster()/fit_models()
-# return list of probs and model parameters/inputs
 
 # function that takes prob matrix and returns ambiguity and uncertainity 
 # norm by row, col
 # 2 functions (1 for row, 1 for col)
 
-# 3 
 assign()
 # call prior function for cutoffs 
-# take FlowFrameFCB as input
-# return list of assignment (vector)
 
 # 4 
 # levels to naming files
@@ -70,21 +49,13 @@ assign()
 # plots for cutoffs and distributions 
 # reprex for example data set (reproducible)
 # load barcoded flowFrame
+
+# name for channel to recognize pacific blue regardless of case and spaces 
+# have user select channel 
+# find closest match for ssc,fsc, pb, po, etc
 ```
 
-```{r debarcoder object}
-list(
-  fcb.ff, #original ff
-  uptake.ff,
-  barcodes = list(
-    bc1 = list(
-      deskewing = list(deskewed.v, model, input.params),# output from step 1
-      clustering = list(probs.m, fitted.params, input.params), #output from step 2
-      assignments = list(assignemnts.v, input.params(uncertainty_co, ambiguity.co))
-    )
-  )
-)
-
+```{r debarcoder final}
 generate_debarcoding_report()
 plot(debarcoded.s3, what = "deskew")
 finalize.bc(debarcoded.s3) #=>flowset
