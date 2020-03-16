@@ -73,3 +73,65 @@ assign_flowFrameFCB <- function(flowFrameFCB,
 
   return(flowFrameFCB)
 }
+
+#' Ambiguity cutoff
+#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing
+#' and clustering (at least one barcodes slot filled)
+#' @return returns the first choice is no choice is made, otherwise returns
+#'  a the choice, or an error if the choice was invaldi
+
+calculate.ambiguity <- function(flowFrameFCB)
+{
+
+  if (!any(class(flowFrameFCB) == "flowFrameFCB")) {
+    stop("Input must be an object of class flowFrameFCB")
+  }
+
+  if (length(flowFrameFCB@barcodes) == 0) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+    )
+  }
+
+  if (length(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]) == 1) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
+    )
+  }
+
+  probs =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["clustering"]][["probabilities"]]
+
+  row.max <-  apply(probs, 1, sum)
+probs.norm.row <- sweep(probs, 1, row.max, FUN="/")
+
+return(probs.norm.row)}
+
+#' Likelihood cutoff
+#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing
+#' and clustering (at least one barcodes slot filled)
+#' @return returns the first choice is no choice is made, otherwise returns
+#'  a the choice, or an error if the choice was invaldi
+
+calculate.likelihood <- function(flowFrameFCB)
+{    if (!any(class(flowFrameFCB) == "flowFrameFCB")) {
+  stop("Input must be an object of class flowFrameFCB")
+}
+
+  if (length(flowFrameFCB@barcodes) == 0) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+    )
+  }
+
+  if (length(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]) == 1) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
+    )
+  }
+
+  probs =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["clustering"]][["probabilities"]]
+
+  col.max <-  apply(probs, 2, max)
+probs.norm.col <- sweep(probs, 2, col.max, FUN="/")
+return(probs.norm.col)}
+

@@ -12,12 +12,14 @@
 #' as stained with the approriate barcoding controls}
 #' @slot barcodes {a list of barcodes, each one named for the channel from which
 #' it was derived}
+#' @slot platemap {a platemap for conditions per barcode level}
 #' @importClassesFrom flowCore flowFrame
 #' @export
 setClass("flowFrameFCB",
          representation = representation(barcoded.ff = "flowFrame",
                                          uptake.ff = "flowFrame",
-                                         barcodes = "list")
+                                         barcodes = "list",
+                                         platemap = "data.frame")
          )
 
 ## constructor
@@ -38,5 +40,6 @@ flowFrameFCB <- function(barcoded.ff, uptake.ff = NULL) {
 
   return(new("flowFrameFCB",barcoded.ff = barcoded.ff,
                             uptake.ff = uptake.ff,
-                            barcodes = list()))
+                            barcodes = list(),
+                            platemap = list()))
 }

@@ -1,0 +1,33 @@
+---
+title: "DebarcodeR Example"
+author: "Benjamin Reisman and Sierra Barone"
+date: "03/16/2020"
+output: html_document
+---
+
+```{r test}
+library(flowCore)
+library(debarcoder)
+
+barcoded.ff <- read.FCS("stained.fcs")
+uptake.ff <- read.FCS("uptake.fcs")
+
+flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
+class(flowFrameFCB )
+
+deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("earth"))
+
+deskewedFCB1 <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_orange_a"), method = c("earth"))
+
+clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 8, opt = "mixture", dist = "Skew.normal")
+
+assignmentFCB <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") , likelihoodcut = 8, ambiguitycut = 0.02)
+
+```
+
+```{r some plots}
+
+hist(flowFrameFCB@barcoded.ff@exprs[,11], n= 500)
+hist(deskewedFCB@barcodes$pacific_blue_a$deskewing$values, n = 500)
+
+```
