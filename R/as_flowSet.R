@@ -10,6 +10,28 @@
 
 as.flowSet <- function(flowFrameFCB) {
 
+  if (!any(class(flowFrameFCB) == "flowFrameFCB")) {
+    stop("Input must be an object of class flowFrameFCB")
+  }
+
+  if (length(flowFrameFCB@barcodes) == 0) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+    )
+  }
+
+  if (length(flowFrameFCB@barcodes[[1]]) == 1) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
+    )
+  }
+
+  if (length(flowFrameFCB@barcodes[[1]]) == 2) {
+    stop(
+      "Input must have channels in the barcodes slot that have been run through assign_flowFrameFCB"
+    )
+  }
+
   barcoded.data = as.data.frame(flowFrameFCB@barcoded.ff@exprs)
   for (i in 1:length(flowFrameFCB@barcodes)){
     barcoded.data[,ncol(barcoded.data)+1]<- flowFrameFCB@barcodes[[i]]$assignment$values
