@@ -77,8 +77,8 @@ assign_flowFrameFCB <- function(flowFrameFCB,
 #' Ambiguity cutoff
 #' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing
 #' and clustering (at least one barcodes slot filled)
-#' @return returns the first choice is no choice is made, otherwise returns
-#'  a the choice, or an error if the choice was invaldi
+#' @return the prbability matrix normalized by row
+#' @export
 
 calculate.ambiguity <- function(flowFrameFCB)
 {
@@ -109,8 +109,8 @@ return(probs.norm.row)}
 #' Likelihood cutoff
 #' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing
 #' and clustering (at least one barcodes slot filled)
-#' @return returns the first choice is no choice is made, otherwise returns
-#'  a the choice, or an error if the choice was invaldi
+#' @return the prbability matrix normalized by column
+#' @export
 
 calculate.likelihood <- function(flowFrameFCB)
 {    if (!any(class(flowFrameFCB) == "flowFrameFCB")) {

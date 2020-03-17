@@ -13,21 +13,28 @@ barcoded.ff <- read.FCS("stained.fcs")
 uptake.ff <- read.FCS("uptake.fcs")
 
 flowFrameFCB <- flowFrameFCB(barcoded.ff, uptake.ff)
-class(flowFrameFCB )
+class(flowFrameFCB)
+
+hist(flowFrameFCB@barcoded.ff@exprs[,11], n= 500)
+hist(flowFrameFCB@barcoded.ff@exprs[,12], n= 500)
 
 deskewedFCB <- deskew_flowFrameFCB(flowFrameFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_blue_a"), method = c("earth"))
 
-deskewedFCB1 <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_orange_a"), method = c("earth"))
+deskewedFCB <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fsc_a","ssc_a"), channel = c("pacific_orange_a"), method = c("earth"))
 
-clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 8, opt = "mixture", dist = "Skew.normal")
+hist(deskewedFCB@barcodes$pacific_blue_a$deskewing$values, n = 500)
+hist(deskewedFCB@barcodes$pacific_orange_a$deskewing$values, n = 500)
 
-assignmentFCB <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") , likelihoodcut = 8, ambiguitycut = 0.02)
+clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 7, opt = "mixture", dist = "Skew.normal")
+
+clusteredFCB <- cluster_flowFrameFCB(clusteredFCB, channel = c("pacific_orange_a"), levels = 5, opt = "mixture", dist = "Skew.normal")
+
+assignmentFCB <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") , likelihoodcut = 8, ambiguitycut = 0.1)
+
+assignmentFCB <- assign_flowFrameFCB(assignmentFCB, channel = c("pacific_orange_a") , likelihoodcut = 8, ambiguitycut = 0.1)
 
 ```
 
 ```{r some plots}
-
-hist(flowFrameFCB@barcoded.ff@exprs[,11], n= 500)
-hist(deskewedFCB@barcodes$pacific_blue_a$deskewing$values, n = 500)
 
 ```

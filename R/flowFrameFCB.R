@@ -19,7 +19,7 @@ setClass("flowFrameFCB",
          representation = representation(barcoded.ff = "flowFrame",
                                          uptake.ff = "flowFrame",
                                          barcodes = "list",
-                                         platemap = "data.frame")
+                                         platemap = "list")
          )
 
 ## constructor
