@@ -27,5 +27,7 @@ as stained with the approriate barcoding controls}}
 
 \item{\code{barcodes}}{{a list of barcodes, each one named for the channel from which
 it was derived}}
+
+\item{\code{platemap}}{{a platemap for conditions per barcode level}}
 }}
 

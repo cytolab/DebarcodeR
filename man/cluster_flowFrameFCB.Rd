@@ -19,13 +19,13 @@ cluster_flowFrameFCB(
 \arguments{
 \item{flowFrameFCB}{a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing (at least one barcodes slot filled)}
 
-\item{channel}{The name (string) of the channel to be corrected}
+\item{channel}{The name (string) of the channel to be clustered}
 
 \item{levels}{integer, the number of barcoding intensities present in the vector}
 
 \item{opt}{string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization}
 
-\item{dist}{string in c("normal, skew.Normal, Tdist"), passed to mixsmsn}
+\item{dist}{string in c("Normal, Skew.normal, Tdist"), passed to mixsmsn}
 
 \item{subsample}{Integer, number of cells to subsample, defaults to 10,000}
 

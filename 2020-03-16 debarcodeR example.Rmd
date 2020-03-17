@@ -25,13 +25,13 @@ deskewedFCB <- deskew_flowFrameFCB(deskewedFCB, ret.model = T,predictors = c("fs
 hist(deskewedFCB@barcodes$pacific_blue_a$deskewing$values, n = 500)
 hist(deskewedFCB@barcodes$pacific_orange_a$deskewing$values, n = 500)
 
-clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 7, opt = "mixture", dist = "Skew.normal")
+clusteredFCB <- cluster_flowFrameFCB(deskewedFCB, channel = c("pacific_blue_a"), levels = 3, opt = "mixture", dist = "Skew.normal")
 
-clusteredFCB <- cluster_flowFrameFCB(clusteredFCB, channel = c("pacific_orange_a"), levels = 5, opt = "mixture", dist = "Skew.normal")
+clusteredFCB <- cluster_flowFrameFCB(clusteredFCB, channel = c("pacific_orange_a"), levels = 2, opt = "mixture", dist = "Skew.normal")
 
-assignmentFCB <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") , likelihoodcut = 8, ambiguitycut = 0.1)
+assignmentFCB <- assign_flowFrameFCB(clusteredFCB, channel = c("pacific_blue_a") , likelihoodcut = 8, ambiguitycut = 0.02)
 
-assignmentFCB <- assign_flowFrameFCB(assignmentFCB, channel = c("pacific_orange_a") , likelihoodcut = 8, ambiguitycut = 0.1)
+assignmentFCB <- assign_flowFrameFCB(assignmentFCB, channel = c("pacific_orange_a") , likelihoodcut = 8, ambiguitycut = 0.02)
 
 ```
 
