@@ -3,6 +3,8 @@ title: "DebarcodeR Example"
 author: "Benjamin Reisman and Sierra Barone"
 date: "03/16/2020"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Load libraries and read in data
@@ -20,7 +22,7 @@ library(ggplot2)
 # read in FCS files for barcoded and uptake control samples
 barcoded.ff <- read.FCS("stained.fcs")
 uptake.ff <- read.FCS("uptake.fcs")
-
+summary(barcoded.ff@exprs)
 ```
 
 # Create debarcoder object
