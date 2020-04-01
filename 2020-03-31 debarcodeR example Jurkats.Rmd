@@ -18,7 +18,8 @@ library(tidyverse)
 library(ggplot2)
 
 # read in FCS files for barcoded and uptake control samples
-barcoded.ff <- read.FCS("truth.FCS_Barcoded_Ungated.fcs")
+barcoded.ff <- read.FCS("stained.fcs")
+uptake.ff <- read.FCS("uptake.fcs")
 
 ```
 
@@ -31,14 +32,8 @@ Create flowFrame FCB with slots filled with barcoded and uptake samples
 # test class of flowFrameFCB object
 class(flowFrameFCB)
 
-markers = as.data.frame(barcoded.ff@exprs)
-scaled <- markers %>%
-  mutate_all(function(x)
-    asinh(x / 150))
-barcoded.ff@exprs[,c(1:14)] <- as.matrix(scaled[,c(1:14)])
-
 # create flowFrameFCB object using barcoded and uptake control sample as flowFrames
-flowFrameFCB <- flowFrameFCB(barcoded.ff)
+flowFrameFCB <- flowFrameFCB(barcoded.ff,uptake.ff)
                               
 # plot Pacific Blue and Pacific Orange histograms 
 hist(flowFrameFCB@barcoded.ff@exprs[,11], n= 600, main = NULL, xlab = "Pacific Blue")
