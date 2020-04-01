@@ -79,7 +79,7 @@ plot.deskewed = as.data.frame(cbind( deskewedFCB@barcodes$pacific_orange_a$deske
   
   bind_cols(plot.deskewed) %>%
   bind_cols(as.data.frame(flowFrameFCB@barcoded.ff@exprs)) %>%
-  ggplot(aes(x=pacific_blue_a, y = pacific_orange_a)) +
+  ggplot(aes(x=pacific_orange_a, y = pacific_blue_a)) +
   geom_bin2d( bins= 300) + 
   scale_fill_viridis_c(option = "A") +
   theme_bw()
