@@ -80,9 +80,8 @@ assign_flowFrameFCB <- function(flowFrameFCB,
 #' @return the prbability matrix normalized by row
 #' @export
 
-calculate.ambiguity <- function(flowFrameFCB)
+calculate.ambiguity <- function(flowFrameFCB,channel)
 {
-
   if (!any(class(flowFrameFCB) == "flowFrameFCB")) {
     stop("Input must be an object of class flowFrameFCB")
   }
@@ -93,7 +92,7 @@ calculate.ambiguity <- function(flowFrameFCB)
     )
   }
 
-  if (length(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]) == 1) {
+  if (length(flowFrameFCB@barcodes[[1]]) == 1) {
     stop(
       "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
     )
@@ -112,22 +111,23 @@ return(probs.norm.row)}
 #' @return the prbability matrix normalized by column
 #' @export
 
-calculate.likelihood <- function(flowFrameFCB)
-{    if (!any(class(flowFrameFCB) == "flowFrameFCB")) {
-  stop("Input must be an object of class flowFrameFCB")
+calculate.likelihood <- function(flowFrameFCB,channel){
+  if (!any(class(flowFrameFCB) == "flowFrameFCB"))
+    {
+    stop("Input must be an object of class flowFrameFCB")
+  }
+
+if (length(flowFrameFCB@barcodes) == 0) {
+  stop(
+    "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+  )
 }
 
-  if (length(flowFrameFCB@barcodes) == 0) {
-    stop(
-      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
-    )
-  }
-
-  if (length(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]]) == 1) {
-    stop(
-      "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
-    )
-  }
+if (length(flowFrameFCB@barcodes[[1]]) == 1) {
+  stop(
+    "Input must have channels in the barcodes slot that have been run through cluster_flowFrameFCB"
+  )
+}
 
   probs =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["clustering"]][["probabilities"]]
 

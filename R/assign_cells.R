@@ -11,7 +11,7 @@
 #' @return a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
 #'  otherwise number corresponds to the barcoding level assignment of that cell
 #' @export
-assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.02,   # pass vector of ambiguity cutoffs?
+assign_cells <- function(fcb_df, probs, likelihoodcut = 8 , ambiguitycut = 0.2,   # pass vector of ambiguity cutoffs?
                          output = "classif", channel = NULL){
 
 
