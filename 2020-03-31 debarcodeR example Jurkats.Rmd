@@ -3,6 +3,8 @@ title: "DebarcodeR Example"
 author: "Benjamin Reisman and Sierra Barone"
 date: "03/16/2020"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Load libraries and read in data
@@ -143,10 +145,11 @@ ggplot(data = meltR, mapping = aes(x = cutoff, y = value, color = variable)) +
 
 tests <- list()
 counting = 1
+
 for (s in rev(seq(2,100,by = 1))){
     likely <- probs.norm.col > 1/s
     likely.sum <- apply(likely, 1, sum) 
-    most.likely = classif[which(likely.sum == 1)]
+    most.likely = classif[which(likely.sum > 0)]
 tests[[counting]] = summary(as.factor(most.likely))
 counting = counting + 1}
 
@@ -156,6 +159,5 @@ look.at.counts$cutoff = rev(seq(2,100,by = 1))
 meltR = reshape2::melt(look.at.counts, id.vars = "cutoff", measure.vars = c(1:8))
 ggplot(data = meltR, mapping = aes(x = cutoff, y = value, color = variable)) +
     geom_line() + theme_bw()
-
 
 ```
