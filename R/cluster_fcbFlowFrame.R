@@ -3,7 +3,7 @@
 #'This function allows you to calculate the probability of a cell originating from a given population using
 #'either gaussian mixture modeling or jenks natural breaks classification
 #'
-#' @param flowFrameFCB a flowFrameFCB object with barcoded flowframe and uptake flowframe post deskewing (at least one barcodes slot filled)
+#' @param fcbFlowFrame a fcbFlowFrame object with barcoded flowframe and uptake flowframe post deskewing (at least one barcodes slot filled)
 #' @param channel The name (string) of the channel to be clustered
 #' @param ret.model Option to retain the model for deskewing
 #' @param updateProgress used in reactive context (shiny) to return progress information to GUI
@@ -13,12 +13,12 @@
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
 #' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)
 #'
-#' @return a flowFrameFCB with deskewed barcodes slot and clustering slot with a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
+#' @return a fcbFlowFrame with deskewed barcodes slot and clustering slot with a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
 #' If gaussian mixture modeling is used the probailities correspond to the probability
 #' of the cell originaiting that level under the distrubtion specified by the mixture model
 #' If jenks natural breaks optimization is used, the probability is estimated empirically based on a histogram
 #'
-#' @seealso \code{\link{deskew_flowFrameFCB}}
+#' @seealso \code{\link{deskew_fcbFlowFrame}}
 #' @export
 #' @import classInt mixsmsn sn
 
@@ -28,7 +28,7 @@
 # uptake for two channels - use as model (Prior)
 # READ smsn.mix paper and function
 
-cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_flowFrameFCB
+cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_fcbFlowFrame
                        channel, #channel name (char)
                        levels, #number of levels
                        opt = "mixture", #mixture (guassian mixture models) or fisher (univariate k-means)
@@ -40,13 +40,13 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
 
 
   # match.arg1 here for options and distributions (normal, skew.normal) - dist and opt
-  if(!any(class(flowFrameFCB) == "flowFrameFCB")){
-    stop("Input must be an object of class flowFrameFCB")
+  if(!any(class(fcbFlowFrame) == "fcbFlowFrame")){
+    stop("Input must be an object of class fcbFlowFrame")
   }
 
-  if (length(flowFrameFCB@barcodes) == 0) {
+  if (length(fcbFlowFrame@barcodes) == 0) {
     stop(
-      "Input must have channels in the barcodes slot that have been run through deskew_flowFrameFCB"
+      "Input must have channels in the barcodes slot that have been run through deskew_fcbFlowFrame"
     )
   }
 
@@ -57,13 +57,13 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
   dist_selected <- match.arg1(dist, distributions)
 
 
- vec =  flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][["deskewing"]][["values"]]
+  vec <-  fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][["deskewing"]][["values"]]
 
   quantiles <- quantile(vec, c(trim/2, 1- trim/2))
   vec.trim <- vec[quantiles[1] < vec & quantiles[2] > vec]
   vecss <- sample(vec.trim, subsample, replace = TRUE)
 
-  if(opt_selected == "mixture") {
+  if (opt_selected == "mixture") {
 
     if (levels > 1) {
       mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")   #fisher-jenks (breaks in data)
@@ -87,11 +87,11 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
     Snorm.df <- data.frame(loc, scale, shape)
     probs <- data.frame(x = vec)
 
-    for (i in (1:nrow(Snorm.df))){
+    for (i in (1:nrow(Snorm.df))) {
       probs[,as.character(i)] <- sn::dsn(vec, dp = as.numeric(Snorm.df[i,]))
     }
 
-    if(levels > 1) {
+    if (levels > 1) {
       probs.scaled <- apply(probs[,-1], 1, function(vec) { vec * Snorm.analysis$pii})
       probs.scaled.df <- as.data.frame(t(probs.scaled))[,rev(order(loc))]
     } else {
@@ -99,7 +99,7 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
       probs.scaled.df <- as.data.frame(probs.scaled)
     }
 
-  } else if(opt_selected == "fisher") {
+  } else if (opt_selected == "fisher") {
     mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")
 
     classif <- lapply(vec, FUN = function(x) {findInterval(x, mod.int$brks)})
@@ -112,10 +112,10 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
     vec.split <- split(vec, classif)
 
     hist.probs <- list()
-    for (i in as.character(1:max(as.numeric(names(vec.split))))){
+    for (i in as.character(1:max(as.numeric(names(vec.split))))) {
       myhist <- hist(vec.split[[i]],100, plot = FALSE)
       binprobs <- myhist$counts/sum(myhist$counts)
-      hist.probs.i<- rep(0, times = length(vec))
+      hist.probs.i <- rep(0, times = length(vec))
       bin.assingments <- findInterval(vec, myhist$breaks)
       hist.probs.i[which(bin.assingments != 0)] <- binprobs[bin.assingments]
       hist.probs.i[which(is.na(hist.probs.i))] <- 0
@@ -126,16 +126,16 @@ cluster_flowFrameFCB <- function(flowFrameFCB, #flowFrame FCB, output of deskwe_
 
   }
 
-  if(ret.model == FALSE){
-    flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df)
-    names(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]])[2] <-
+  if (ret.model == FALSE) {
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df)
+    names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
       "clustering"
   } else{
-    flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df, model = Snorm.analysis)
-    names(flowFrameFCB@barcodes[[which(names(flowFrameFCB@barcodes) == channel)]])[2] <-
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df, model = Snorm.analysis)
+    names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
       "clustering"
   }
-  return(flowFrameFCB)
+  return(fcbFlowFrame)
 }
 
 # plot as histogram and show fit overlay (Ben has code?)

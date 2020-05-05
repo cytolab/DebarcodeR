@@ -8,7 +8,7 @@ assign_cells(
   fcb_df,
   probs,
   likelihoodcut = 8,
-  ambiguitycut = 0.02,
+  ambiguitycut = 0.2,
   output = "classif",
   channel = NULL
 )

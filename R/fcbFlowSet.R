@@ -1,10 +1,10 @@
-#' flowFrameFCB
+#' fcbFlowFrame
 #' -----------------------------------------------------------------------------
 #' A containiner for barcoded flow cytometry data, with slots for the barcoded
 #' flowFrame, a single level 'uptake control', and a slot to contain the results
 #' of the debarcoding functions contained within debarcoder.
 #'
-#' @name flowFrameFCB-class
+#' @name fcbFlowFrame-class
 #' @slot barcoded.ff {Object of class\code{flowFrame} containing the barcoded
 #' data, approriately compensated, transformed, and gated}
 #' @slot uptake.ff {object of class \code{flowFrame} containing cells which
@@ -15,31 +15,28 @@
 #' @slot platemap {a platemap for conditions per barcode level}
 #' @importClassesFrom flowCore flowFrame
 #' @export
-setClass("flowFrameFCB",
-         representation = representation(barcoded.ff = "flowFrame",
-                                         uptake.ff = "flowFrame",
-                                         barcodes = "list",
-                                         platemap = "list")
-         )
+setClass("fcbFlowSet",
+         representation = representation(fcbFrames = "list",
+                                         uptake.ff = "flowFrame")
+)
 
 ## constructor
 #' @export
-flowFrameFCB <- function(barcoded.ff, uptake.ff = NULL) {
-  if(!any(class(barcoded.ff) == "flowFrame")){
-    stop("barcoded.ff must be an object of class FlowFrame")
+
+fcbFlowSet <- function(fcbFrames, uptake = NULL) {
+  if (!any(class(fcbFrames) == "list")) {
+    #needs to actually check that all the items are actually fcbFlowFrames
+    stop("fcbFlowFrames must be a list of fcbFlowFrames")
   }
 
-  if(!any(c(class(uptake.ff) == "flowFrame", is.null(uptake.ff)))){
+  if (!any(c(class(uptake.ff) == "flowFrame", is.null(uptake.ff)))) {
     stop("uptake.ff must be an object of class FlowFrame")
   }
 
-  if(is.null(uptake.ff)) {
-    warning("No uptake flowFrame supplied, will use barcoded sample as uptake control")
-    uptake.ff <- barcoded.ff
+  if (is.null(uptake.ff)) {
+    warning("No uptake flowFrame supplied, will check each fcbFlowFrame for uptake control")
+    #do something here
   }
 
-  return(new("flowFrameFCB",barcoded.ff = barcoded.ff,
-                            uptake.ff = uptake.ff,
-                            barcodes = list(),
-                            platemap = list()))
+  return(new("fcbFlowSet", fcbFrames = fcbFrames, uptake = uptake))
 }
