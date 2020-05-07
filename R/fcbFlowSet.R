@@ -1,10 +1,10 @@
-#' fcbFlowFrame
+#' fcbFlowSet
 #' -----------------------------------------------------------------------------
 #' A containiner for barcoded flow cytometry data, with slots for the barcoded
 #' flowFrame, a single level 'uptake control', and a slot to contain the results
 #' of the debarcoding functions contained within debarcoder.
 #'
-#' @name fcbFlowFrame-class
+#' @name fcbFlowSet-class
 #' @slot barcoded.ff {Object of class\code{flowFrame} containing the barcoded
 #' data, approriately compensated, transformed, and gated}
 #' @slot uptake.ff {object of class \code{flowFrame} containing cells which
@@ -15,28 +15,18 @@
 #' @slot platemap {a platemap for conditions per barcode level}
 #' @importClassesFrom flowCore flowFrame
 #' @export
-setClass("fcbFlowSet",
-         representation = representation(fcbFrames = "list",
-                                         uptake.ff = "flowFrame")
+.fcbFlowSet <- setClass("fcbFlowSet",
+                          contains = "flowSet"
 )
 
-## constructor
 #' @export
-
-fcbFlowSet <- function(fcbFrames, uptake = NULL) {
-  if (!any(class(fcbFrames) == "list")) {
-    #needs to actually check that all the items are actually fcbFlowFrames
-    stop("fcbFlowFrames must be a list of fcbFlowFrames")
+#' @importClassesFrom flowCore flowFrame
+fcbFlowSet <- function(x) {
+  if (!any(class(x) == "flowSet")) {
+    stop("x must be an object of class FlowFrame")
+    #should maybe leave the possibility of attempting to coerce to flowFrame
   }
-
-  if (!any(c(class(uptake.ff) == "flowFrame", is.null(uptake.ff)))) {
-    stop("uptake.ff must be an object of class FlowFrame")
-  }
-
-  if (is.null(uptake.ff)) {
-    warning("No uptake flowFrame supplied, will check each fcbFlowFrame for uptake control")
-    #do something here
-  }
-
-  return(new("fcbFlowSet", fcbFrames = fcbFrames, uptake = uptake))
+  #  print(31)
+  as(x, "fcbFlowSet")
 }
+

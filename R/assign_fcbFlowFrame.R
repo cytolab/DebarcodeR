@@ -12,7 +12,6 @@
 #' a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,
 #' otherwise number corresponds to the barcoding level assignment of that cell
 #' @export
-
 assign_fcbFlowFrame <- function(fcbFlowFrame,
                                 channel,
                                 likelihoodcut = 8 ,
@@ -39,7 +38,7 @@ assign_fcbFlowFrame <- function(fcbFlowFrame,
   probs.norm.row <- calculate.ambiguity(probs)
   probs.norm.col <- calculate.likelihood(probs)
 
-  classif <- rep(0, nrow(fcbFlowFrame@barcoded.ff))
+  classif <- rep(0, nrow(fcbFlowFrame))
 
   if (ncol(probs) > 1) { # if assigning more than one level
     classif <- as.numeric(apply(probs.norm.row, 1, which.max))
