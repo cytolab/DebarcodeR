@@ -27,20 +27,19 @@
 # bounds as 5th and 95th, separation of each level --> find probability
 # uptake for two channels - use as model (Prior)
 # READ smsn.mix paper and function
-
 cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_fcbFlowFrame
                        channel, #channel name (char)
                        levels, #number of levels
                        opt = "mixture", #mixture (guassian mixture models) or fisher (univariate k-means)
                        dist = NULL, #for gaussian mixture models, Skew.normal, normal, T.dist
-                       subsample = 10e3,
+                       subsample = 3e3,
                        trim = 0,
                        ret.model = TRUE,
                        updateProgress = NULL){
 
 
   # match.arg1 here for options and distributions (normal, skew.normal) - dist and opt
-  if(!any(class(fcbFlowFrame) == "fcbFlowFrame")){
+  if (!any(class(fcbFlowFrame) == "fcbFlowFrame")) {
     stop("Input must be an object of class fcbFlowFrame")
   }
 
@@ -59,13 +58,14 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
 
   vec <-  fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][["deskewing"]][["values"]]
 
-  quantiles <- quantile(vec, c(trim/2, 1- trim/2))
+  quantiles <- quantile(vec, c(trim/2, 1 - trim/2))
   vec.trim <- vec[quantiles[1] < vec & quantiles[2] > vec]
   vecss <- sample(vec.trim, subsample, replace = TRUE)
 
   if (opt_selected == "mixture") {
 
     if (levels > 1) {
+      #?classInt::classIntervals
       mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")   #fisher-jenks (breaks in data)
       classif <- sapply(vecss, function(x) pracma::findintervals(x, mod.int$brks))
       classif <- unlist(classif)
@@ -75,24 +75,26 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
     if (is.function(updateProgress)) {
       updateProgress(detail = "Optimizing Mixture Model")
     }
-
-    Snorm.analysis <- mixsmsn::smsn.mix(vecss, nu = 3, g = levels, criteria = TRUE,
-                                        get.init = TRUE, group = TRUE, family = dist_selected, calc.im = FALSE, obs.prob = TRUE,
+    Snorm.analysis <- mixsmsn::smsn.mix(vecss, nu = 3,
+                                        g = levels,
+                                        shape = rep(0, levels),
+                                        mu = mu.i,
+                                        get.init = TRUE, group = TRUE, family = dist_selected, calc.im = FALSE,
                                         kmeans.param = list(iter.max = 20, n.start = 10, algorithm = "Hartigan-Wong"))   #sigma 2 parameter = mu.i
-
     loc <- Snorm.analysis$mu
     scale <- sqrt(Snorm.analysis$sigma2)
     shape <- Snorm.analysis$shape
-
     Snorm.df <- data.frame(loc, scale, shape)
-    probs <- data.frame(x = vec)
-
-    for (i in (1:nrow(Snorm.df))) {
-      probs[,as.character(i)] <- sn::dsn(vec, dp = as.numeric(Snorm.df[i,]))
-    }
+    probs.x <- data.frame(x = vec)
+    probs.y <- apply(Snorm.df, 1, function(i) sn::dsn(vec, dp = as.numeric(i)))
+    colnames(probs.y) <- as.character(1:nrow(Snorm.df))
+    probs <- cbind(probs.x, probs.y)
+    #for (i in (1:nrow(Snorm.df))) {
+     # probs[,as.character(i)] <- sn::dsn(vec, dp = as.numeric(Snorm.df[i,]))
+    #}
 
     if (levels > 1) {
-      probs.scaled <- apply(probs[,-1], 1, function(vec) { vec * Snorm.analysis$pii})
+      probs.scaled <- t(as.matrix(probs[,-1])) * Snorm.analysis$pii
       probs.scaled.df <- as.data.frame(t(probs.scaled))[,rev(order(loc))]
     } else {
       probs.scaled <- probs[,-1]
@@ -102,7 +104,7 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
   } else if (opt_selected == "fisher") {
     mod.int <- classInt::classIntervals(vecss, levels, style = "fisher")
 
-    classif <- lapply(vec, FUN = function(x) {findInterval(x, mod.int$brks)})
+    classif <- lapply(vec, FUN = function(x) {findInterval(x, mod.int$brks)}) ##
 
     classif <- unlist(classif)
 

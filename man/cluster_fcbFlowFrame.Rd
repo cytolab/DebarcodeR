@@ -10,7 +10,7 @@ cluster_fcbFlowFrame(
   levels,
   opt = "mixture",
   dist = NULL,
-  subsample = 10000,
+  subsample = 3000,
   trim = 0,
   ret.model = TRUE,
   updateProgress = NULL
