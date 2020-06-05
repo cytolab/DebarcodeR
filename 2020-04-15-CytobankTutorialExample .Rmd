@@ -23,11 +23,18 @@ library(patchwork)
 
 myacs <- list.files(pattern = ".acs")
 ce <- open_cytobank_experiment(myacs)
+gs <- cytobank_to_gatingset(ce)
+
 fcsFiles <- list.files(ce$fcsdir, full.names = TRUE)
-xmlfile <-ce$gatingML
+
+
 gs <- cytobank_to_gatingset(xmlfile, fcsFiles)
+
 fs.ncdf <- gs_pop_get_data(gs, "intact cells")
 
+trans
+
+debug(cytobank_to_gatingset)
 #fs.ncdf <- gs_pop_get_data(gs, "singlets")
 fs.ncdf %>%
   ggplot(aes(x=`SSC-A`, y = `FSC-A`)) + 

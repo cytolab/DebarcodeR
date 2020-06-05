@@ -12,7 +12,7 @@ apply_platemap <- function(fcbFlowSet, platemap, drop0 = FALSE, prefix = NA) {
   if (class(fcbFlowSet) != "fcbFlowSet") {
     stop("Input must be a fcbFlowSet")
   }
-  barcoded.ff@description$FILENAME
+
   if (!any(class(platemap) == "data.frame")) {
     stop("Input must be a data.frame")
   }

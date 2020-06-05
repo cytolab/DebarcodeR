@@ -33,10 +33,13 @@ myplatemap <- tibble(`Pacific Blue-A` = rep(1:8, times = 6),
 Deskew each barcoding channel individually choosing predictors, method, and channel
 
 ```{r minimal parallel workflow}
+ptm <- proc.time()
 ##------------------------------------------------------------------------------
 barcoded.ff <- deskew_fcbFlowFrame(barcoded.ff, ret.model = T, predictors = c("fsc_a","ssc_a"),# "fsc_h", "fsc_w", "ssc_h", "ssc_w"),
                                    channel = c("pacific_blue_a"), method = c("earth"), 
                                    uptake = uptake.ff)
+#install.packages("profvis")
+
 barcoded.ff <- cluster_fcbFlowFrame(barcoded.ff, channel = c("pacific_blue_a"), levels = 8, opt = "mixture", dist = "Skew.normal")
 barcoded.ff <- assign_fcbFlowFrame(barcoded.ff, channel = c("pacific_blue_a") , likelihoodcut = 8, ambiguitycut = 0.05)
 ##------------------------------------------------------------------------------
@@ -49,6 +52,8 @@ barcoded.ff <- assign_fcbFlowFrame(barcoded.ff, channel = c("pacific_orange_a") 
 myassignments <- getAssignments(barcoded.ff)
 barcoded.fs <- split(barcoded.ff, myassignments) 
 barcoded.fs2 <- apply_platemap(barcoded.fs, myplatemap, prefix = "truth")
+proc.time() - ptm
+
 ##------------------------------------------------------------------------------
 ggcyto::ggcyto(barcoded.fs2, aes(x = `Pacific Orange-A`, y = `Pacific Blue-A`)) + 
   geom_bin2d(bins = 128) + 
@@ -68,13 +73,14 @@ barcoded.ff <- assign_fcbFlowFrame(barcoded.ff, channel = c("pacific_blue_a") , 
 myassignments <- getAssignments(barcoded.ff)
 barcoded.fs <- split(barcoded.ff, myassignments) 
 ##------------------------------------------------------------------------------
-class(barcoded.fs)
+profvis({
 barcoded.fs <- deskew_fcbFlowSet(barcoded.fs, ret.model = T, predictors = c("fsc_a","ssc_a"),# "fsc_h", "fsc_w", "ssc_h", "ssc_w"),
                                    channel = c("pacific_orange_a"), method = c("earth"), 
                                    uptake = uptake.ff)
 barcoded.fs <- cluster_fcbFlowSet(barcoded.fs, channel = c("pacific_orange_a"), levels = 6, opt = "mixture", dist = "Skew.normal", 
                                   subsample = 1e3)
 barcoded.fs <- assign_fcbFlowSet(barcoded.fs, channel = c("pacific_orange_a") , likelihoodcut = 8, ambiguitycut = 0.05)
+})
 ##------------------------------------------------------------------------------
 myassignments <- getAssignments(barcoded.ff)
 barcoded.fs <- split(barcoded.ff, myassignments) 

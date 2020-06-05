@@ -94,7 +94,7 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
     #}
 
     if (levels > 1) {
-      probs.scaled <- t(as.matrix(probs[,-1])) * Snorm.analysis$pii
+      probs.scaled <- t(t(as.matrix(probs[,-1])) * Snorm.analysis$pii)
       probs.scaled.df <- as.data.frame(t(probs.scaled))[,rev(order(loc))]
     } else {
       probs.scaled <- probs[,-1]
@@ -123,17 +123,18 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
       hist.probs.i[which(is.na(hist.probs.i))] <- 0
       hist.probs[[i]] <- hist.probs.i
     }
-    hist.probs.m <- do.call(cbind, hist.probs)
-    probs.scaled.df <- as.data.frame(hist.probs.m)
+    probs <- do.call(cbind, hist.probs)
+    probs.scaled <- probs
+  #  probs.scaled.df <- as.data.frame(hist.probs.m)
 
   }
 
   if (ret.model == FALSE) {
-    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df)
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled)
     names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
       "clustering"
   } else{
-    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled.df, model = Snorm.analysis)
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled, model = Snorm.analysis)
     names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
       "clustering"
   }

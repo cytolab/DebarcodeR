@@ -15,7 +15,7 @@
 assign_fcbFlowFrame <- function(fcbFlowFrame,
                                 channel,
                                 likelihoodcut = 8 ,
-                                ambiguitycut = 0.02){
+                                ambiguitycut = 0.02) {
 
   if (class(fcbFlowFrame) != "fcbFlowFrame") {
     stop("Input must be a fcbFlowFrame")
@@ -27,44 +27,58 @@ assign_fcbFlowFrame <- function(fcbFlowFrame,
     )
   }
 
-  if (length(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]]) == 1) {
+  if (!'clustering' %in% names(fcbFlowFrame@barcodes[[channel]])) {
     stop(
       "Input must have channels in the barcodes slot that have been run through cluster_fcbFlowFrame"
     )
   }
-
-  probs =  fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][["clustering"]][["probabilities"]]
-
+  probs <-  fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][["clustering"]][["probabilities"]]
+  if (channel == "wells") {
+    channel <- names(fcbFlowFrame@barcodes[['wells']][['clustering']]$channels)
+  }
   probs.norm.row <- calculate.ambiguity(probs)
   probs.norm.col <- calculate.likelihood(probs)
 
   classif <- rep(0, nrow(fcbFlowFrame))
 
   if (ncol(probs) > 1) { # if assigning more than one level
-    classif <- as.numeric(apply(probs.norm.row, 1, which.max))
+    classif <- max.col(probs.norm.row)
   } else {# if assigning only one level
     classif <- rep(1, nrow(probs))
   }
 
-  classif[which(is.na(classif))] <- 0 #catches the few cells with 0 probability of belonging to any pop
-  likely <- probs.norm.col > 1/likelihoodcut
+    classif <- colnames(probs)[classif]
+    unclass <- paste(rep(0, length(channel)), collapse = ".")
+
+    classif[which(is.na(classif))] <- unclass #catches the few cells with 0 probability of belonging to any pop
+    likely <- probs.norm.col > 1/likelihoodcut
 
   if (ncol(probs) > 1) { # if assigning more than one level
-    likely.sum <- apply(likely, 1, sum) #converts logical to numeric
+    likely.sum <- apply(likely, 1, sum) #converts logical to numeri
    # print(paste0(round(sum(apply(likely, 1, any))/nrow(likely)*100, 3), "% above likelihood cutoff"))
-    classif[which(likely.sum < 1)] <- 0
+    classif[which(likely.sum < 1)] <- unclass
     non.ambigious <- apply(probs.norm.row, 1, max) > (1 - ambiguitycut)
-    classif[which(!non.ambigious)] <- 0
+    classif[which(!non.ambigious)] <- unclass
   } else {
     likely.sum <- as.numeric(likely)
-    classif[which(likely.sum != 1)] <- 0
+    classif[which(likely.sum != 1)] <- unclass
   }
-
-  fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[3]] <- list(values = classif,
-                                                                                       ambiguity = ambiguitycut,
-                                                                                       likelihood = likelihoodcut)
-  names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[3] <- "assignment"
-
+  if (length(channel) > 1) {
+    classif.ls <- data.table::tstrsplit(classif, ".", fixed = TRUE, names = channel, type.convert = T)
+    fcbFlowFrame@barcodes[channel] <- mapply(function(bc, assignments) {
+      bc[['assignment']][['values']] <- assignments
+      bc[['assignment']][['ambiguity']] <- ambiguitycut
+      bc[['assignment']][['likelihood']] <- likelihoodcut
+      return(bc)
+    },
+    fcbFlowFrame@barcodes[channel],
+    classif.ls,
+    SIMPLIFY = FALSE)
+  } else {
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][["assignment"]] <- list(values = classif,
+                                                                                                    ambiguity = ambiguitycut,
+                                                                                                    likelihood = likelihoodcut)
+  }
   return(fcbFlowFrame)
 }
 
@@ -75,9 +89,8 @@ assign_fcbFlowFrame <- function(fcbFlowFrame,
 #' @export
 
 calculate.ambiguity <- function(probs) {
-  row.max <-  apply(probs, 1, sum)
-  probs.norm.row <- sweep(probs, 1, row.max, FUN = "/")
-
+  row.sum <-  rowSums(probs)
+  probs.norm.row <- probs/row.sum
 return(probs.norm.row)}
 
 #' Likelihood cutoff
@@ -85,10 +98,11 @@ return(probs.norm.row)}
 #' and clustering (at least one barcodes slot filled)
 #' @return the prbability matrix normalized by column
 #' @export
+#' @importFrom matrixStats colMaxs
 
 calculate.likelihood <- function(probs){
-  col.max <-  apply(probs, 2, max)
-  probs.norm.col <- sweep(probs, 2, col.max, FUN = "/")
+  col.max <-  matrixStats::colMaxs(probs)
+  probs.norm.col <- t(t(probs)/col.max)
   return(probs.norm.col)
 }
 

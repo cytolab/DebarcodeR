@@ -8,11 +8,9 @@
 getAssignments <- function(x, platemap = NULL, simplify = FALSE) {
   getAssignments.ff <- function(x) {
     assignments <- lapply(x@barcodes, `[[`, "assignment")
-    x@barcodes$pacific_orange_a$deskewing
     assignments <- lapply(assignments, `[[`, "values")
     assignments <- lapply(assignments, as.factor)
   }
-
   if (class(x) == "fcbFlowFrame") {
     assignments <- getAssignments.ff(x)
   } else if (class(x) == "fcbFlowSet") {
@@ -25,5 +23,7 @@ getAssignments <- function(x, platemap = NULL, simplify = FALSE) {
   if (simplify) {
     #some sort of unlist operation
   }
+
+  assignments <- assignments[!names(assignments)== "wells"]
   return(assignments)
 }
