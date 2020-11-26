@@ -1,9 +1,17 @@
+---
+title: "DebarcodeR"
+author: "Benjamin Reisman"
+date: "8/18/2020"
+output: 
+  html_document: 
+    keep_md: yes
+---
 
-# DebarcodeR
+
 
 DebarcodeR is an R package for demultiplexing fluorescent cell barcoded (FCB) barcoded flow cytometery data. Fluorescent cell barcoding is a technique for implementing pooled sample multiplexing in fluorescence flow cytometery using amine reactive dyes to label each sample with unique barcodes by varying the concentration of one or more dyes. Sample can the be pooled, stained, and acquired in a single tube, which reduces instrument time and reagent consumption and improves data robustness. Following acquisition, the data must be 'debarcoded' (also known as deconvolution or demultiplexing) which traditionally has required manual biaxial gating. DebarcodeR implements an algorithm for automating this demultiplexing process which improves reproducibility and enables high throughput data processing. For more information about DebarcodeR, see our preprint (link) and for more information about FCB, see Krutzik et al. 2006.
 
-## Installation
+# Installation
 
 DebarcodeR reuses many of the classes and methods for working with FCS files implemented in the flowCore. Most workflows will also require the use of one or more of the complementary cytoverse packages such as CytoML, FlowWorkspace, and ggCyto. A Bioconductor version of DebarcodeR is in the works, but for now can be installed from github.
 
@@ -66,7 +74,7 @@ ggplot(jurkatFCB, aes(x= `FSC-A`, y = `SSC-A`)) +
   scale_fill_viridis_c(option = "A", guide = F)
 ```
 
-![](README_files/figure-html/read data-1.png)<!-- -->
+![](README_files/figure-html/readData-1.png)<!-- -->
 
 ```r
 ggplot(jurkatFCB, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) + 
@@ -86,7 +94,7 @@ ggplot(jurkatFCB, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) +
 ## Warning: Removed 3 rows containing missing values (geom_tile).
 ```
 
-![](README_files/figure-html/read data-2.png)<!-- -->
+![](README_files/figure-html/readData-2.png)<!-- -->
 
 One of the experimental controls that allows DebarcodeR to accurately model dye uptake is the 'external standard' which consists of a single sample which has been stained with a single level of each barcoding dye. In this case, since each tube was run separately we can pull out any single 'sample' to use as our external standard, though in the 'real world' we won't normally have a 'truth' column to filter on.
 
@@ -125,7 +133,7 @@ ggplot(jurkatFCB.std, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) +
   coord_fixed()
 ```
 
-![](README_files/figure-html/generate external standard-1.png)<!-- -->
+![](README_files/figure-html/generateExternalStandard-1.png)<!-- -->
 
 ## Deskewing
 
@@ -180,11 +188,11 @@ debarcoded.ff <- em_optimize(debarcoded.ff, niter = 5)
 
 ```
 ## Initializing...
-## EM Round 1 of 5 ... loglik: -94680
-## EM Round 2 of 5 ... loglik: -27331
-## EM Round 3 of 5 ... loglik: -22387
-## EM Round 4 of 5 ... loglik: -21780
-## EM Round 5 of 5 ... loglik: -21714
+## EM Round 1 of 5 ... loglik: -94111
+## EM Round 2 of 5 ... loglik: -27436
+## EM Round 3 of 5 ... loglik: -22615
+## EM Round 4 of 5 ... loglik: -21812
+## EM Round 5 of 5 ... loglik: -21713
 ## Calculating probabilities...Done!
 ```
 

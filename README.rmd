@@ -43,7 +43,7 @@ library(dplyr)
 
 The dataset included with DebarcodeR consists of 191,233 jurkat cells barcoded with 8 levels of Pacific Orange, 6 levels of Pacific Blue, and 1 level of Alexa 750 [on channel APC-H7] for a total of 48 'samples.' Each sample was run separately and combined in R. This corresponds to **Dataset 2** in our manuscript.
 
-```{r read data}
+```{r readData}
 data("jurkatFCB")
 
 jurkatFCB
@@ -65,7 +65,7 @@ ggplot(jurkatFCB, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) +
 
 One of the experimental controls that allows DebarcodeR to accurately model dye uptake is the 'external standard' which consists of a single sample which has been stained with a single level of each barcoding dye. In this case, since each tube was run separately we can pull out any single 'sample' to use as our external standard, though in the 'real world' we won't normally have a 'truth' column to filter on.
 
-```{r generate external standard}
+```{r generateExternalStandard}
 
 filter.11 <- expressionFilter(`row` == 1 & `col` == 1, filterId="rowfilter")
 jurkatFCB.std <- Subset(jurkatFCB, filter.11)
