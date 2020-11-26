@@ -10,6 +10,7 @@
 #' @return a tibble/data.frame with the selected channel corrected for fsc and ssc
 #' @import earth
 #' @export
+
 morphology_corr.earth <- function(fcb,
                                   uptake,
                                   ret.model = FALSE,
@@ -23,8 +24,7 @@ morphology_corr.earth <- function(fcb,
                                   ...) {
   what.options <- c("x", "x + se")
   what <- match.arg1(what, what.options)
-  print(what)
-  #print(channel)
+
   if (is.function(updateProgress)) {
     updateProgress(detail = "Training adaptive splines...")}
 
@@ -57,14 +57,12 @@ morphology_corr.earth <- function(fcb,
 
     fcb[,channel] <- fcb[,channel] - predict(earth.model, fcb) + median(unlist(uptake[,channel]))
     fcb[,paste0(channel,"se")]<- predict(earth.model, newdata = fcb, interval = "se")
-
   }
 
-
   if(ret.model == FALSE){
-    return(fcb)
+    return(list(values = as.numeric(fcb[,channel])))
   } else{
-    return(list(fcb = fcb[,channel],
+    return(list(values = as.numeric(fcb[,channel]),
                 model = earth.model))
   }
 }

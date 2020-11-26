@@ -10,34 +10,44 @@
 #'
 #' @seealso \code{\link{selectDenseScatterArea}} \code{\link{doRegressConstrained}}
 #' @export
-morphology_corr.knignenburg <- function(fcb,
-                                   uptake,
-                                   channel,
-                                   fsc_ssc = c(fsc = 'FSC-A', ssc = 'SSC-A'),
-                                   subsample = 10e3,
-                                   updateProgress = NULL) {
-  #print(channel)
+
+morphology_corr.knijnenburg <- function(fcb,
+                                        uptake,
+                                        channel,
+                                        fsc_ssc = c(fsc = 'FSC-A', ssc = 'SSC-A'),
+                                        subsample = 10e3,
+                                        updateProgress = NULL,
+                                        ret.model = FALSE) {
   if (is.function(updateProgress)) {
-    updateProgress(detail = "Mapping cellular Density")}
-  #print("26")
+    updateProgress(detail = "Mapping cellular Density")
+  }
+
   area_density <- selectDenseScatterArea(uptake,
                                          subsample = subsample,
                                          fsc_ssc = fsc_ssc)
-  #print("30")
+
 
   if (is.function(updateProgress)) {
-    updateProgress(detail = "Performing Morphology Correction")}
-  regression.output <- doRegressContrained(uptake,
-                                           fcb,
-                                           fsc_ssc = fsc_ssc,
-                                           Loc = area_density$loc,
-                                           weight = area_density$c,
-                                           trans = "none",
-                                           columns = c(channel),
-                                           monodir = c(1,1))
+    updateProgress(detail = "Performing Morphology Correction")
+  }
+  regression.output <- doRegressConstrained(
+    uptake,
+    fcb,
+    fsc_ssc = fsc_ssc,
+    Loc = area_density$loc,
+    weight = area_density$c,
+    trans = "none",
+    columns = c(channel),
+    monodir = c(1, 1)
+  )
   cor.data <- regression.output[[1]]
-  fcb[, channel]<- cor.data[, channel]
-  return(fcb)
-}
+  fcb[, channel] <- cor.data[, channel]
 
+  if (ret.model == FALSE) {
+    return(list(values = fcb[, channel]))
+  } else{
+    return(list(values = fcb[, channel],
+                model = regression.output))
+  }
+}
 

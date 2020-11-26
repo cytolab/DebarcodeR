@@ -4,8 +4,16 @@
 \alias{morphology_corr.lm}
 \title{Corrects morphology based on scatter or uptake control.}
 \usage{
-morphology_corr.lm(fcb, uptake, channel, predictors = NULL,
-  subsample = 10000, slope = 1, updateProgress = NULL)
+morphology_corr.lm(
+  fcb,
+  uptake,
+  channel,
+  predictors = NULL,
+  subsample = 10000,
+  slope = 1,
+  updateProgress = NULL,
+  ret.model = FALSE
+)
 }
 \arguments{
 \item{fcb}{the barcoded dataframe, post compensation and preprocessing}

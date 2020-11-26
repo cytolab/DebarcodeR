@@ -4,9 +4,19 @@
 \alias{morphology_corr.earth}
 \title{Corrects morphology using multivariate adaptive regression splines as implemented in the earth pacakge}
 \usage{
-morphology_corr.earth(fcb, uptake, ret.model = FALSE, what = c("x",
-  "x + se"), nfold = 1, ncross = 0, channel, predictors = c("FSC-A",
-  "SSC-A"), subsample = 30000, updateProgress = NULL, ...)
+morphology_corr.earth(
+  fcb,
+  uptake,
+  ret.model = FALSE,
+  what = c("x", "x + se"),
+  nfold = 1,
+  ncross = 0,
+  channel,
+  predictors = c("FSC-A", "SSC-A"),
+  subsample = 30000,
+  updateProgress = NULL,
+  ...
+)
 }
 \arguments{
 \item{fcb}{the barcoded dataframe, post compensation and preprocessing}

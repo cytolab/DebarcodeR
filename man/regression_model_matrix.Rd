@@ -4,8 +4,12 @@
 \alias{regression_model_matrix}
 \title{Used to build the regression model, not to be called directly by the used}
 \usage{
-regression_model_matrix(nrow = 2, ncol = 8, vars = c(1, 1, 1, 2, 2,
-  2, 3, 3), powers = c(1, 0.5, 2, 1, 0.5, 2, 1, 0.5))
+regression_model_matrix(
+  nrow = 2,
+  ncol = 8,
+  vars = c(1, 1, 1, 2, 2, 2, 3, 3),
+  powers = c(1, 0.5, 2, 1, 0.5, 2, 1, 0.5)
+)
 }
 \value{
 numeric vector of length nrow(fcb_df) representing the morphology corrected channel
