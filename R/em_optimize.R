@@ -2,7 +2,7 @@
 #'
 #' @param fcbFlowFrame a fcbFlowFrame object with barcoded flowframe and uptake flowframe post deskewing, clustering, and assignment
 #' @param ambiguitycut numeric from 0 to 1, threshhold below which to discard ambigious cells, eg: 0.02,
-#'  discards cells with more than 2% chance of originating from another population
+#'  discards cells with more than 2\% chance of originating from another population
 #' @param subsample number, number of cells to subsample during m step
 #' @return a fcbFlowFrame object with a barcode slot filled with deskewing, clustering, cell assignment as
 #' a vector of integers from 0:ncol(probs), cells assigned a classification of 0 remained unassigned,

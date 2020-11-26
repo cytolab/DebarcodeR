@@ -15,7 +15,7 @@
 #' @seealso text
 #' @examples text
 
-doRegressContrained <- function(single_level_bc, fcb_df = NULL,
+doRegressConstrained <- function(single_level_bc, fcb_df = NULL,
                                 Loc, weight, trans,
                                 fsc_ssc = c(fsc = 'FSC-A', ssc = 'SSC-A'),
                                 val3 = NULL, constrained_flag = 1,

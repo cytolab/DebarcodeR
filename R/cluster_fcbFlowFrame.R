@@ -11,7 +11,7 @@
 #' @param opt string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization
 #' @param dist string in c("Normal, Skew.normal, Tdist"), passed to mixsmsn
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
-#' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)
+#' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1\% of data)
 #'
 #' @return a fcbFlowFrame with deskewed barcodes slot and clustering slot with a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
 #' If gaussian mixture modeling is used the probailities correspond to the probability
@@ -52,7 +52,7 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
   options <- c("mixture","fisher")
   opt_selected <- match.arg1(opt, options)
 
-  distributions <- c("normal","Skew.normal","Tdist")
+  distributions <- c("Normal","Skew.normal","Tdist")
   dist_selected <- match.arg1(dist, distributions)
 
 

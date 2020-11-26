@@ -29,7 +29,7 @@ cluster_fcbFlowFrame(
 
 \item{subsample}{Integer, number of cells to subsample, defaults to 10,000}
 
-\item{trim}{numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1% of data)}
+\item{trim}{numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1\% of data)}
 
 \item{ret.model}{Option to retain the model for deskewing}
 

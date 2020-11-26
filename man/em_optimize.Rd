@@ -19,7 +19,7 @@ em_optimize(
 \item{subsample}{number, number of cells to subsample during m step}
 
 \item{ambiguitycut}{numeric from 0 to 1, threshhold below which to discard ambigious cells, eg: 0.02,
-discards cells with more than 2% chance of originating from another population}
+discards cells with more than 2\% chance of originating from another population}
 }
 \value{
 a fcbFlowFrame object with a barcode slot filled with deskewing, clustering, cell assignment as

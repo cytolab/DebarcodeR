@@ -30,7 +30,7 @@ morphology_corr.knijnenburg <- function(fcb,
   if (is.function(updateProgress)) {
     updateProgress(detail = "Performing Morphology Correction")
   }
-  regression.output <- doRegressContrained(
+  regression.output <- doRegressConstrained(
     uptake,
     fcb,
     fsc_ssc = fsc_ssc,

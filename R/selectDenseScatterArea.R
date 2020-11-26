@@ -1,4 +1,4 @@
-#' find the area which contains 95% of the data
+#' find the area which contains 95\% of the data
 #'
 #' @param data text
 #' @param fsc text

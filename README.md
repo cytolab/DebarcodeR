@@ -13,3 +13,5 @@ BiocManager::install("flowCore")
 #Followed by DebarcodeR
 remotes::install_github(bjreisman/DebarcodeR)
 ```
+
+# Getting Started

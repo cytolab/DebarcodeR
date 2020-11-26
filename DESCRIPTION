@@ -11,4 +11,26 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports: pracma, MASS, scales, flowCore, mixsmsn, sn, classInt, quadprog, earth, dplyr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
+Collate: 
+    'apply_platemap.R'
+    'fcbFlowFrame.R'
+    'as_flowFrame.R'
+    'assign_fcbFlowFrame.R'
+    'assign_fcbFlowSet.R'
+    'cluster_fcbFlowFrame.R'
+    'cluster_fcbFlowSet.R'
+    'deskew_fcbFlowFrame.R'
+    'deskew_fcbFlowSet.R'
+    'doRegressContrained.R'
+    'em_optimize.R'
+    'fcbFlowSet.R'
+    'getAssignments.R'
+    'jurkat-data.R'
+    'morphology_corr_earth.R'
+    'morphology_corr_knignenburg.R'
+    'morphology_corr_lm.R'
+    'morphology_corr_master.R'
+    'plot-fcbFlowFrame-assignments.R'
+    'selectDenseScatterArea.R'
+    'split_fcbFlowFrame.R'

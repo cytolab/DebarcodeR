@@ -16,7 +16,7 @@
 #' @import methods
 #' @importClassesFrom flowCore flowFrame
 #' @export
-.fcbFlowFrame <- setClass("fcbFlowFrame",
+fcbFlowFrame <- setClass("fcbFlowFrame",
           contains = "flowFrame",
           slots = c(barcodes = "list")
          )

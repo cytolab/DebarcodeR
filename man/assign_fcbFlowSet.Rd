@@ -13,7 +13,7 @@ assign_fcbFlowSet(fcbFlowSet, channel, likelihoodcut = 8, ambiguitycut = 0.02)
 as the most likely cell from that population}
 
 \item{ambiguitycut}{numeric from 0 to 1, threshhold below which to discard ambigious cells, eg: 0.02,
-discards cells with more than 2% chance of originating from another population}
+discards cells with more than 2\% chance of originating from another population}
 
 \item{fcbFlowFrame}{a fcbFlowFrame object with barcoded flowframe and uptake flowframe post deskewing
 and clustering (at least one barcodes slot filled)}

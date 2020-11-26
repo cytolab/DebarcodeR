@@ -4,6 +4,7 @@
 #' @param ... other parameters passed to specific methods
 #' @export
 #' @import methods
+#' @include fcbFlowFrame.R
 setGeneric("as.flowFrame", function(x, ...) {
   standardGeneric("as.flowFrame")
 })

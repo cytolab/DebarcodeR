@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectDenseScatterArea.R
 \name{selectDenseScatterArea}
 \alias{selectDenseScatterArea}
-\title{find the area which contains 95% of the data}
+\title{find the area which contains 95\% of the data}
 \usage{
 selectDenseScatterArea(
   data,
@@ -23,7 +23,7 @@ selectDenseScatterArea(
 some text
 }
 \description{
-find the area which contains 95% of the data
+find the area which contains 95\% of the data
 }
 \examples{
 text
