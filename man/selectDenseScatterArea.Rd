@@ -2,10 +2,13 @@
 % Please edit documentation in R/selectDenseScatterArea.R
 \name{selectDenseScatterArea}
 \alias{selectDenseScatterArea}
-\title{find the area which contains 95% of the data}
+\title{find the area which contains 95\% of the data}
 \usage{
-selectDenseScatterArea(data, fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"),
-  subsample = 10000)
+selectDenseScatterArea(
+  data,
+  fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"),
+  subsample = 10000
+)
 }
 \arguments{
 \item{data}{text}
@@ -20,7 +23,7 @@ selectDenseScatterArea(data, fsc_ssc = c(fsc = "FSC-A", ssc = "SSC-A"),
 some text
 }
 \description{
-find the area which contains 95% of the data
+find the area which contains 95\% of the data
 }
 \examples{
 text

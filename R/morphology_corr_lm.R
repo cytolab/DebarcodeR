@@ -9,17 +9,18 @@
 #'
 #' @return a tibble/data.frame with the selected channel corrected for fsc and ssc
 #' @export
+
 morphology_corr.lm <- function(fcb,
                                uptake,
                                channel,
                                predictors = NULL,
                                subsample = 10e3,
                                slope = 1,
-                               updateProgress = NULL) {
+                               updateProgress = NULL,
+                               ret.model = FALSE) {
 
-  #print(channel)
-  if(length(predicotrs != 1)){
-    stop('Please select a singel predictor')}
+  if(length(predictors) != 1){
+    stop('Please select a single predictor')}
 
   if(is.null(slope)){
     lm.formula <- as.formula(paste(channel, "~", predictors))
@@ -30,7 +31,12 @@ morphology_corr.lm <- function(fcb,
                                     predictors, ")"))
   }
   lm.model <- lm(lm.formula, data = uptake)
-  fcb[,channel]<- fcb[,channel] - predict(lm.model, newdata = fcb) +   median(unlist(stained[,channel]))
+  fcb[,channel]<- fcb[,channel] - predict(lm.model, newdata = fcb) +   median(unlist(fcb[,channel]))
 
-  return(fcb)
+  if(ret.model == FALSE){
+    return(list(values = fcb[,channel]))
+  } else{
+    return(list(values = fcb[,channel],
+                model = lm.model))
+  }
 }

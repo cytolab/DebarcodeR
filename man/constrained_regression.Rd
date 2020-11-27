@@ -4,8 +4,18 @@
 \alias{constrained_regression}
 \title{Used to build the regression model, not to be called directly by the used}
 \usage{
-constrained_regression(X, Y, fsc_limits, ssc_limits, val3, D, OFFSET, Bx,
-  rm, monodir)
+constrained_regression(
+  X,
+  Y,
+  fsc_limits,
+  ssc_limits,
+  val3,
+  D,
+  OFFSET,
+  Bx,
+  rm,
+  monodir
+)
 }
 \value{
 numeric vector of length nrow(fcb_df) representing the morphology corrected channel
