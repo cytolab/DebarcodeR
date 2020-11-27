@@ -1,0 +1,57 @@
+#name: Name
+#pacific_blue_a: NA
+#pacific_orange_a: NA
+#well: NA
+#Prefix: NA
+#Filename: NA
+#FCS_File: NA
+name	pacific_blue_a	pacific_orange_a	well	Prefix	Filename	FCS_File
+Jurkat_FCB_001_A01	1.1	1	1	A01	Jurkat_FCB_001	Jurkat_FCB_001_A01	Jurkat_FCB_001_A01.fcs
+Jurkat_FCB_001_A02	1.2	1	2	A02	Jurkat_FCB_001	Jurkat_FCB_001_A02	Jurkat_FCB_001_A02.fcs
+Jurkat_FCB_001_A03	1.3	1	3	A03	Jurkat_FCB_001	Jurkat_FCB_001_A03	Jurkat_FCB_001_A03.fcs
+Jurkat_FCB_001_A04	1.4	1	4	A04	Jurkat_FCB_001	Jurkat_FCB_001_A04	Jurkat_FCB_001_A04.fcs
+Jurkat_FCB_001_A05	1.5	1	5	A05	Jurkat_FCB_001	Jurkat_FCB_001_A05	Jurkat_FCB_001_A05.fcs
+Jurkat_FCB_001_A06	1.6	1	6	A06	Jurkat_FCB_001	Jurkat_FCB_001_A06	Jurkat_FCB_001_A06.fcs
+Jurkat_FCB_001_B01	2.1	2	1	B01	Jurkat_FCB_001	Jurkat_FCB_001_B01	Jurkat_FCB_001_B01.fcs
+Jurkat_FCB_001_B02	2.2	2	2	B02	Jurkat_FCB_001	Jurkat_FCB_001_B02	Jurkat_FCB_001_B02.fcs
+Jurkat_FCB_001_B03	2.3	2	3	B03	Jurkat_FCB_001	Jurkat_FCB_001_B03	Jurkat_FCB_001_B03.fcs
+Jurkat_FCB_001_B04	2.4	2	4	B04	Jurkat_FCB_001	Jurkat_FCB_001_B04	Jurkat_FCB_001_B04.fcs
+Jurkat_FCB_001_B05	2.5	2	5	B05	Jurkat_FCB_001	Jurkat_FCB_001_B05	Jurkat_FCB_001_B05.fcs
+Jurkat_FCB_001_B06	2.6	2	6	B06	Jurkat_FCB_001	Jurkat_FCB_001_B06	Jurkat_FCB_001_B06.fcs
+Jurkat_FCB_001_C01	3.1	3	1	C01	Jurkat_FCB_001	Jurkat_FCB_001_C01	Jurkat_FCB_001_C01.fcs
+Jurkat_FCB_001_C02	3.2	3	2	C02	Jurkat_FCB_001	Jurkat_FCB_001_C02	Jurkat_FCB_001_C02.fcs
+Jurkat_FCB_001_C03	3.3	3	3	C03	Jurkat_FCB_001	Jurkat_FCB_001_C03	Jurkat_FCB_001_C03.fcs
+Jurkat_FCB_001_C04	3.4	3	4	C04	Jurkat_FCB_001	Jurkat_FCB_001_C04	Jurkat_FCB_001_C04.fcs
+Jurkat_FCB_001_C05	3.5	3	5	C05	Jurkat_FCB_001	Jurkat_FCB_001_C05	Jurkat_FCB_001_C05.fcs
+Jurkat_FCB_001_C06	3.6	3	6	C06	Jurkat_FCB_001	Jurkat_FCB_001_C06	Jurkat_FCB_001_C06.fcs
+Jurkat_FCB_001_D01	4.1	4	1	D01	Jurkat_FCB_001	Jurkat_FCB_001_D01	Jurkat_FCB_001_D01.fcs
+Jurkat_FCB_001_D02	4.2	4	2	D02	Jurkat_FCB_001	Jurkat_FCB_001_D02	Jurkat_FCB_001_D02.fcs
+Jurkat_FCB_001_D03	4.3	4	3	D03	Jurkat_FCB_001	Jurkat_FCB_001_D03	Jurkat_FCB_001_D03.fcs
+Jurkat_FCB_001_D04	4.4	4	4	D04	Jurkat_FCB_001	Jurkat_FCB_001_D04	Jurkat_FCB_001_D04.fcs
+Jurkat_FCB_001_D05	4.5	4	5	D05	Jurkat_FCB_001	Jurkat_FCB_001_D05	Jurkat_FCB_001_D05.fcs
+Jurkat_FCB_001_D06	4.6	4	6	D06	Jurkat_FCB_001	Jurkat_FCB_001_D06	Jurkat_FCB_001_D06.fcs
+Jurkat_FCB_001_E01	5.1	5	1	E01	Jurkat_FCB_001	Jurkat_FCB_001_E01	Jurkat_FCB_001_E01.fcs
+Jurkat_FCB_001_E02	5.2	5	2	E02	Jurkat_FCB_001	Jurkat_FCB_001_E02	Jurkat_FCB_001_E02.fcs
+Jurkat_FCB_001_E03	5.3	5	3	E03	Jurkat_FCB_001	Jurkat_FCB_001_E03	Jurkat_FCB_001_E03.fcs
+Jurkat_FCB_001_E04	5.4	5	4	E04	Jurkat_FCB_001	Jurkat_FCB_001_E04	Jurkat_FCB_001_E04.fcs
+Jurkat_FCB_001_E05	5.5	5	5	E05	Jurkat_FCB_001	Jurkat_FCB_001_E05	Jurkat_FCB_001_E05.fcs
+Jurkat_FCB_001_E06	5.6	5	6	E06	Jurkat_FCB_001	Jurkat_FCB_001_E06	Jurkat_FCB_001_E06.fcs
+Jurkat_FCB_001_F01	6.1	6	1	F01	Jurkat_FCB_001	Jurkat_FCB_001_F01	Jurkat_FCB_001_F01.fcs
+Jurkat_FCB_001_F02	6.2	6	2	F02	Jurkat_FCB_001	Jurkat_FCB_001_F02	Jurkat_FCB_001_F02.fcs
+Jurkat_FCB_001_F03	6.3	6	3	F03	Jurkat_FCB_001	Jurkat_FCB_001_F03	Jurkat_FCB_001_F03.fcs
+Jurkat_FCB_001_F04	6.4	6	4	F04	Jurkat_FCB_001	Jurkat_FCB_001_F04	Jurkat_FCB_001_F04.fcs
+Jurkat_FCB_001_F05	6.5	6	5	F05	Jurkat_FCB_001	Jurkat_FCB_001_F05	Jurkat_FCB_001_F05.fcs
+Jurkat_FCB_001_F06	6.6	6	6	F06	Jurkat_FCB_001	Jurkat_FCB_001_F06	Jurkat_FCB_001_F06.fcs
+Jurkat_FCB_001_G01	7.1	7	1	G01	Jurkat_FCB_001	Jurkat_FCB_001_G01	Jurkat_FCB_001_G01.fcs
+Jurkat_FCB_001_G02	7.2	7	2	G02	Jurkat_FCB_001	Jurkat_FCB_001_G02	Jurkat_FCB_001_G02.fcs
+Jurkat_FCB_001_G03	7.3	7	3	G03	Jurkat_FCB_001	Jurkat_FCB_001_G03	Jurkat_FCB_001_G03.fcs
+Jurkat_FCB_001_G04	7.4	7	4	G04	Jurkat_FCB_001	Jurkat_FCB_001_G04	Jurkat_FCB_001_G04.fcs
+Jurkat_FCB_001_G05	7.5	7	5	G05	Jurkat_FCB_001	Jurkat_FCB_001_G05	Jurkat_FCB_001_G05.fcs
+Jurkat_FCB_001_G06	7.6	7	6	G06	Jurkat_FCB_001	Jurkat_FCB_001_G06	Jurkat_FCB_001_G06.fcs
+Jurkat_FCB_001_H01	8.1	8	1	H01	Jurkat_FCB_001	Jurkat_FCB_001_H01	Jurkat_FCB_001_H01.fcs
+Jurkat_FCB_001_H02	8.2	8	2	H02	Jurkat_FCB_001	Jurkat_FCB_001_H02	Jurkat_FCB_001_H02.fcs
+Jurkat_FCB_001_H03	8.3	8	3	H03	Jurkat_FCB_001	Jurkat_FCB_001_H03	Jurkat_FCB_001_H03.fcs
+Jurkat_FCB_001_H04	8.4	8	4	H04	Jurkat_FCB_001	Jurkat_FCB_001_H04	Jurkat_FCB_001_H04.fcs
+Jurkat_FCB_001_H05	8.5	8	5	H05	Jurkat_FCB_001	Jurkat_FCB_001_H05	Jurkat_FCB_001_H05.fcs
+Jurkat_FCB_001_H06	8.6	8	6	H06	Jurkat_FCB_001	Jurkat_FCB_001_H06	Jurkat_FCB_001_H06.fcs
+Jurkat_FCB_001_Unassigned	Unassigned	NA	NA	Unassigned	Jurkat_FCB_001	Jurkat_FCB_001_Unassigned	Jurkat_FCB_001_Unassigned.fcs
