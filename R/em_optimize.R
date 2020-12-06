@@ -68,6 +68,7 @@ em_optimize <- function(fcbFlowFrame,
     deskewed.reps, SIMPLIFY = FALSE)
   cl.mat <- do.call('*', deskewed_probs_expanded)
   cl.mat <- cl.mat/rowSums(cl.mat)
+  cl.mat[is.na(cl.mat)] <- 0
   n <- round(nrow(deskewed_cols)*shrinkage)
   data.i <- deskewed_cols#[assigned.ind, ]
   # combn()
