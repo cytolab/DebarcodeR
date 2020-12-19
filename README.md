@@ -1,8 +1,19 @@
-# DebarcodeR
+---
+title: "DebarcodeR"
+author: "Benjamin Reisman"
+date: "8/18/2020"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+
+
+![](README_files/figure-html/hexsticker.png)
 
 DebarcodeR is an R package for demultiplexing fluorescent cell barcoded (FCB) barcoded flow cytometery data. Fluorescent cell barcoding is a technique for implementing pooled sample multiplexing in fluorescence flow cytometery using amine reactive dyes to label each sample with unique barcodes by varying the concentration of one or more dyes. Sample can the be pooled, stained, and acquired in a single tube, which reduces instrument time and reagent consumption and improves data robustness. Following acquisition, the data must be 'debarcoded' (also known as deconvolution or demultiplexing) which traditionally has required manual biaxial gating. DebarcodeR implements an algorithm for automating this demultiplexing process which improves reproducibility and enables high throughput data processing. For more information about DebarcodeR, see our preprint (link) and for more information about FCB, see Krutzik et al. 2006.
 
-## Installation
+# Installation
 
 DebarcodeR reuses many of the classes and methods for working with FCS files implemented in the flowCore. Most workflows will also require the use of one or more of the complementary cytoverse packages such as CytoML, FlowWorkspace, and ggCyto. A Bioconductor version of DebarcodeR is in the works, but for now can be installed from github.
 
@@ -37,28 +48,8 @@ The dataset included with DebarcodeR consists of 191,233 jurkat cells barcoded w
 ```r
 data("jurkatFCB")
 
-jurkatFCB
-```
 
-```
-## flowFrame object 'truth.FCS'
-## with 191233 cells and 16 observables:
-##                  name             desc     range  minRange  maxRange
-## $P1              Time             Time    262144         0    262143
-## $P2             FSC-A            FSC-A    262144         0    262143
-## $P3             FSC-H            FSC-H    262144         0    262143
-## $P4             FSC-W            FSC-W    262144         0    262143
-## $P5             SSC-A            SSC-A    262144         0    262143
-## ...               ...              ...       ...       ...       ...
-## $P12 Pacific Orange-A Pacific Orange-A    262144 -0.685128   8.15916
-## $P13             PE-A             PE-A    262144 -0.247466   8.15916
-## $P14         APC-H7-A         APC-H7-A    262144 -0.362039   7.46601
-## $P15              row              row        16  0.000000   7.00000
-## $P16              col              col        16  0.000000   9.00000
-## 222 keywords are stored in the 'description' slot
-```
 
-```r
 ggplot(jurkatFCB, aes(x= `FSC-A`, y = `SSC-A`)) + 
   geom_bin2d(bins = 200) + 
   theme_classic() + 
@@ -68,24 +59,38 @@ ggplot(jurkatFCB, aes(x= `FSC-A`, y = `SSC-A`)) +
 ![](README_files/figure-html/readData-1.png)<!-- -->
 
 ```r
+ggplot(jurkatFCB, aes(x= `APC-H7-A`, y = `SSC-A`)) + 
+  geom_bin2d(bins = 200) + 
+  theme_classic() + 
+  geom_vline(xintercept = 2.5, linetype = 2) + 
+  scale_fill_viridis_c(option = "A", guide = F)
+```
+
+![](README_files/figure-html/readData-2.png)<!-- -->
+
+```r
+# We recommend filtering on cells which have taken up the internal standard
+filter.is<- expressionFilter(`APC-H7-A` > 2.5, filterId = "ISfilter")
+jurkatFCB <- Subset(jurkatFCB, filter.is)
+
 ggplot(jurkatFCB, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) + 
   geom_bin2d(bins = 200) + 
   theme_classic() + 
   scale_fill_viridis_c(option = "A", guide = F) + 
-  scale_x_continuous(limits = c(3.5, 8.5)) + 
-  scale_y_continuous(limits = c(3, 7.5)) + 
+  scale_x_continuous(limits = c(2.5, 7.2)) + 
+  scale_y_continuous(limits = c(2, 7)) + 
   coord_fixed()
 ```
 
 ```
-## Warning: Removed 8 rows containing non-finite values (stat_bin2d).
+## Warning: Removed 248 rows containing non-finite values (stat_bin2d).
 ```
 
 ```
-## Warning: Removed 3 rows containing missing values (geom_tile).
+## Warning: Removed 5 rows containing missing values (geom_tile).
 ```
 
-![](README_files/figure-html/readData-2.png)<!-- -->
+![](README_files/figure-html/readData-3.png)<!-- -->
 
 One of the experimental controls that allows DebarcodeR to accurately model dye uptake is the 'external standard' which consists of a single sample which has been stained with a single level of each barcoding dye. In this case, since each tube was run separately we can pull out any single 'sample' to use as our external standard, though in the 'real world' we won't normally have a 'truth' column to filter on.
 
@@ -97,21 +102,21 @@ jurkatFCB.std
 ```
 
 ```
-## flowFrame object 'truth.FCS'
-## with 4130 cells and 16 observables:
-##                  name             desc     range  minRange  maxRange
-## $P1              Time             Time    262144         0    262143
-## $P2             FSC-A            FSC-A    262144         0    262143
-## $P3             FSC-H            FSC-H    262144         0    262143
-## $P4             FSC-W            FSC-W    262144         0    262143
-## $P5             SSC-A            SSC-A    262144         0    262143
-## ...               ...              ...       ...       ...       ...
-## $P12 Pacific Orange-A Pacific Orange-A    262144 -0.685128   8.15916
-## $P13             PE-A             PE-A    262144 -0.247466   8.15916
-## $P14         APC-H7-A         APC-H7-A    262144 -0.362039   7.46601
-## $P15              row              row        16  0.000000   7.00000
-## $P16              col              col        16  0.000000   9.00000
-## 222 keywords are stored in the 'description' slot
+## flowFrame object 'Specimen_002_Tube_048_057.fcs'
+## with 1999 cells and 16 observables:
+##                  name        desc     range   minRange  maxRange
+## $P1              Time          NA    262143          0    262143
+## $P2             FSC-A          NA    262143          0    262143
+## $P3             FSC-H          NA    262143          0    262143
+## $P4             FSC-W          NA    262143          0    262143
+## $P5             SSC-A          NA    262143          0    262143
+## ...               ...         ...       ...        ...       ...
+## $P12 Pacific Orange-A          NA    262143 -0.1130921   7.46601
+## $P13             PE-A          NA    262143 -0.0998341   7.46601
+## $P14         APC-H7-A          NA    262143 -0.3620391   7.46601
+## $P15              row          NA         1  8.0000000   8.00000
+## $P16              col          NA         1  6.0000000   6.00000
+## 193 keywords are stored in the 'description' slot
 ```
 
 ```r
@@ -119,9 +124,17 @@ ggplot(jurkatFCB.std, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) +
   geom_bin2d(bins = 200) + 
   theme_classic() + 
   scale_fill_viridis_c(option = "A", guide = F) + 
-  scale_x_continuous(limits = c(3.5, 8.5)) + 
-  scale_y_continuous(limits = c(3, 7.5)) + 
+  scale_x_continuous(limits = c(2.5, 7.2)) + 
+  scale_y_continuous(limits = c(2, 7)) +
   coord_fixed()
+```
+
+```
+## Warning: Removed 10 rows containing non-finite values (stat_bin2d).
+```
+
+```
+## Warning: Removed 2 rows containing missing values (geom_tile).
 ```
 
 ![](README_files/figure-html/generateExternalStandard-1.png)<!-- -->
@@ -179,11 +192,11 @@ debarcoded.ff <- em_optimize(debarcoded.ff, niter = 5)
 
 ```
 ## Initializing...
-## EM Round 1 of 5 ... loglik: -94111
-## EM Round 2 of 5 ... loglik: -27436
-## EM Round 3 of 5 ... loglik: -22615
-## EM Round 4 of 5 ... loglik: -21812
-## EM Round 5 of 5 ... loglik: -21713
+## EM Round 1 of 5 ... loglik: -99062
+## EM Round 2 of 5 ... loglik: -70425
+## EM Round 3 of 5 ... loglik: -68061
+## EM Round 4 of 5 ... loglik: -67759
+## EM Round 5 of 5 ... loglik: -67664
 ## Calculating probabilities...Done!
 ```
 
@@ -203,14 +216,6 @@ debarcoded.ff <- assign_fcbFlowFrame(debarcoded.ff,
                                   ambiguitycut = 0.05)
 
 myassignments <- getAssignments(debarcoded.ff)
-
-str(myassignments)
-```
-
-```
-## List of 2
-##  $ pacific_blue_a  : Factor w/ 9 levels "0","1","2","3",..: 2 2 2 2 2 2 2 2 1 2 ...
-##  $ pacific_orange_a: Factor w/ 7 levels "0","1","2","3",..: 2 2 2 2 2 2 2 2 1 2 ...
 ```
 
 ## Generating FCS Files
