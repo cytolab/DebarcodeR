@@ -25,6 +25,7 @@ morphology_corr <- function(fcb, #takes a flowframe_fcb
                             subsample = 20e3,
                             ret.model = TRUE,
                             verbose = FALSE,
+                            updateProgress = NULL,
                             ...) {
 
 
@@ -38,15 +39,15 @@ morphology_corr <- function(fcb, #takes a flowframe_fcb
     uptake <- fcb
   }
 
-  if (apply_scales == TRUE) {
-    fcb <- apply_scales(fcb, exp_info)
-    uptake <- apply_scales(uptake, exp_info)
-  } else if (apply_scales == FALSE){
-    fcb <- fcb
-    uptake <- uptake
-  } else{
-    stop("apply_scales was not TRUE/FALSE")
-  }
+  # if (apply_scales == TRUE) {
+  #   fcb <- apply_scales(fcb, exp_info)
+  #   uptake <- apply_scales(uptake, exp_info)
+  # } else if (apply_scales == FALSE){
+  #   fcb <- fcb
+  #   uptake <- uptake
+  # } else{
+  #   stop("apply_scales was not TRUE/FALSE")
+  # }
 
 
   if(method_selected == "earth") {
@@ -62,13 +63,15 @@ morphology_corr <- function(fcb, #takes a flowframe_fcb
     )
 
   } else if(method_selected == "knijnenburg") {
-    fcb2 <- morphology_corr.knignenburg(
+    fcb2 <- morphology_corr.knijnenburg(
       fcb = fcb,
       uptake = uptake,
       channel = channel,
       fsc_ssc = predictors,
       subsample = subsample,
-      updateProgress = updateProgress
+      ret.model = ret.model,
+      updateProgress = updateProgress,
+      ...
     )
 
 
@@ -79,7 +82,9 @@ morphology_corr <- function(fcb, #takes a flowframe_fcb
       channel = channel,
       predictors = predictors,
       slope = 1,
-      updateProgress = updateProgress
+      ret.model = ret.model,
+      updateProgress = updateProgress,
+      ...
     )
 
   }
@@ -87,24 +92,24 @@ morphology_corr <- function(fcb, #takes a flowframe_fcb
   if(ret.model == TRUE) {
     #print(str(fcb[["model"]]))
     fcb.mod <- fcb2[["model"]]
-    fcb2 <- fcb2[["fcb"]]
+    fcb2 <- fcb2[["values"]]
    # print(str(fcb.mod))
 
   }
 
-  if (apply_scales == TRUE) {
-    fcb3 <- apply_scales(fcb2, exp_info, inverse = TRUE)
-  } else{
-    fcb3 <- fcb2
-
-  }
-
+  # if (apply_scales == TRUE) {
+  #   fcb3 <- apply_scales(fcb2, exp_info, inverse = TRUE)
+  # } else{
+     fcb3 <- fcb2
+  #
+  # }
+  #print(str(fcb3))
   if(ret.model == TRUE){
    # print(99)
-    return(list(fcb = fcb3[,channel], #focus on this:
+    return(list(values = fcb3, #focus on this:
                 model = fcb.mod))
   } else{
-    return(fcb3[,channel])
+    return(fcb3)
   }
 }
 
