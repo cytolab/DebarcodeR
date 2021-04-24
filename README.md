@@ -14,7 +14,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("flowCore")
 
 #Followed by DebarcodeR
-remotes::install_github("bjreisman/DebarcodeR")
+remotes::install_github("cytolab/DebarcodeR")
 ```
 
 ## Quick Start
