@@ -1,13 +1,26 @@
-Package: debarcoder
+Package: DebarcodeR
 Title: Automated Demultiplexing for Fluorescent Cell Barcoding
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: c(
               person("Benjamin", "Reisman", email = "benjamin.reisman@vanderbilt.edu", role = c("aut", "cre")),
+              person("Sierra", "Barrone", email = "sierra.barone@Vanderbilt.edu", role = c("aut"))
               person("David", "Earl", email = "davidcearl@gmail.com", role = c("aut"))
             )
-Description: What the package does (one paragraph).
+Description: DebarcodeR is an R package for demultiplexing fluorescent cell 
+    barcoded (FCB) barcoded flow cytometery data. Fluorescent cell barcoding is
+    a technique for implementing pooled sample multiplexing in fluorescence flow
+    cytometry using amine reactive dyes to label each sample with unique barcodes
+    by varying the concentration of one or more dyes. Sample can the be pooled,
+    stained, and acquired in a single tube, which reduces instrument time and
+    reagent consumption and improves data robustness. Following acquisition,
+    the data must be 'debarcoded' (also known as deconvolution or demultiplexing)
+    which traditionally has required manual biaxial gating. DebarcodeR implements
+    an algorithm for automating this demultiplexing process which improves
+    reproducibility and enables high throughput data processing.
+    For more information about DebarcodeR, see our manuscript
+    and for more information about FCB, see Krutzik et al. 2006.
 Depends: R (>= 3.4.3)
-License: What license is it under?
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports: pracma, MASS, scales, flowCore, mixsmsn, sn, classInt, quadprog, earth, dplyr
