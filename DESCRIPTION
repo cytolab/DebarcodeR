@@ -3,7 +3,7 @@ Title: Automated Demultiplexing for Fluorescent Cell Barcoding
 Version: 1.0.0
 Authors@R: c(
               person("Benjamin", "Reisman", email = "benjamin.reisman@vanderbilt.edu", role = c("aut", "cre")),
-              person("Sierra", "Barrone", email = "sierra.barone@Vanderbilt.edu", role = c("aut"))
+              person("Sierra", "Barone", email = "sierra.barone@Vanderbilt.edu", role = c("aut")),
               person("David", "Earl", email = "davidcearl@gmail.com", role = c("aut"))
             )
 Description: DebarcodeR is an R package for demultiplexing fluorescent cell 
