@@ -8,9 +8,10 @@
 #' @param ret.model Option to retain the model for deskewing
 #' @param updateProgress used in reactive context (shiny) to return progress information to GUI
 #' @param levels integer, the number of barcoding intensities present in the vector
-#' @param opt string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization
+#' @param opt string, either "mixture" (default) for gaussian mixture modeling, or "fisher" for fisher-jenks natural breaks optimization, or "manual.breaks" for manual specification of breakpoints
 #' @param dist string in c("Normal, Skew.normal, Tdist"), passed to mixsmsn
 #' @param subsample Integer, number of cells to subsample, defaults to 10,000
+#' @param manbreaks Vector, length levels + 1, used to specifiy manual breakpoints for levels
 #' @param trim numberic between 0, 1; used to trim the upper and lower extremes to exlcude outliers (eg. trim = 0.01 exludes most extreme 1\% of data)
 #'
 #' @return a fcbFlowFrame with deskewed barcodes slot and clustering slot with a matrix of probabilities, with ncol = levels, and nrow = legnth(vec).
@@ -35,6 +36,7 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
                        subsample = 3e3,
                        trim = 0,
                        ret.model = TRUE,
+                       manbreaks = NULL,
                        updateProgress = NULL){
 
 
@@ -49,7 +51,7 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
     )
   }
 
-  options <- c("mixture","fisher")
+  options <- c("mixture","fisher", "manual.breaks")
   opt_selected <- match.arg1(opt, options)
 
   distributions <- c("Normal","Skew.normal","Tdist")
@@ -127,14 +129,43 @@ cluster_fcbFlowFrame <- function(fcbFlowFrame, #flowFrame FCB, output of deskwe_
     probs.scaled <- probs
   #  probs.scaled.df <- as.data.frame(hist.probs.m)
 
+  } else if (opt_selected == "manual.breaks") {
+
+    if(is.null(manbreaks)) {stop("Please specifiy manual breakpoints")}
+    if(length(manbreaks) != (levels + 1)) {stop("Please ensure breakpoints n+1 breakpoints are provided as a vector")}
+
+    classif <- lapply(vec, FUN = function(x) {findInterval(x, manbreaks)}) ##
+    classif <- unlist(classif)
+
+    classif <- levels + 1 - classif
+    classif[classif > levels] <- 0
+
+    vec.split <- split(vec, classif)
+
+    hist.probs <- list()
+    for (i in as.character(1:max(as.numeric(names(vec.split))))) {
+      myhist <- hist(vec.split[[i]],100, plot = FALSE)
+      binprobs <- myhist$counts/sum(myhist$counts)
+      hist.probs.i <- rep(0, times = length(vec))
+      bin.assingments <- findInterval(vec, myhist$breaks)
+      hist.probs.i[which(bin.assingments != 0)] <- binprobs[bin.assingments]
+      hist.probs.i[which(is.na(hist.probs.i))] <- 0
+      hist.probs[[i]] <- hist.probs.i
+    }
+    probs <- do.call(cbind, hist.probs)
+    probs.scaled <- probs
   }
 
-  if (ret.model == FALSE) {
-    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled)
+  if (ret.model == TRUE & opt == "mixture") {
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled, model = Snorm.analysis)
+    names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
+      "clustering"
+  } else if (ret.model == TRUE & opt == "fisher") {
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled, model = mod.int)
     names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
       "clustering"
   } else{
-    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled, model = Snorm.analysis)
+    fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]][[2]] <- list(probabilities = probs.scaled)
     names(fcbFlowFrame@barcodes[[which(names(fcbFlowFrame@barcodes) == channel)]])[2] <-
       "clustering"
   }
