@@ -5,6 +5,8 @@ date: "8/18/2020"
 output: 
   html_document: 
     keep_md: yes
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -36,7 +38,7 @@ Debarcoder is designed to take FCS files represented as FlowFrames as an input a
 ```{r load packages, message=FALSE}
 
 library(flowCore)
-library(debarcoder)
+library(DebarcodeR)
 library(ggcyto)
 library(dplyr)
 ```
@@ -81,7 +83,6 @@ One of the experimental controls that allows DebarcodeR to accurately model dye 
 
 filter.11 <- expressionFilter(`row` == 1 & `col` == 1, filterId="rowfilter")
 jurkatFCB.std <- Subset(jurkatFCB, filter.11)
-jurkatFCB.std
 
 ggplot(jurkatFCB.std, aes(x= `Pacific Blue-A`, y = `Pacific Orange-A`)) + 
   geom_bin2d(bins = 200) + 
@@ -105,12 +106,12 @@ my.predictors <- c("fsc_a", "ssc_a",
                    "fsc_h", "ssc_h",
                    "fsc_w", "ssc_w",
                    "apc_h7_a")
-
 debarcoded.ff <- deskew_fcbFlowFrame(jurkatFCB,
                                      uptake = jurkatFCB.std,
                                      predictors = my.predictors,
                                      channel = c("pacific_blue_a"))
 
+#debarcoded.ff@barcodes$pacific_blue_a$deskewing$model
 debarcoded.ff <- deskew_fcbFlowFrame(debarcoded.ff, #output of first run
                                      uptake = jurkatFCB.std,
                                      predictors = my.predictors,
@@ -128,8 +129,8 @@ debarcoded.ff <- cluster_fcbFlowFrame(debarcoded.ff,
                                       channel = c("pacific_orange_a"),
                                       levels = 6)
 debarcoded.ff <- cluster_fcbFlowFrame(debarcoded.ff,
-                                      channel = c("pacific_blue_a"),
-                                      levels = 8)
+                                      channel = c("pacific_blue_a"),                                      levels = 8)
+
 ```
 
 #### Multivariate Clustering
@@ -151,6 +152,16 @@ Unassigned cells are not discarded, but rather assigned a level of 0. The `getAs
 ```{r assign}
 debarcoded.ff <- assign_fcbFlowFrame(debarcoded.ff,
                                   channel = c("wells"),
+                                  likelihoodcut = 12,
+                                  ambiguitycut = 0.05)
+
+debarcoded.ff <- assign_fcbFlowFrame(debarcoded.ff,
+                                  channel = c("pacific_orange_a"),
+                                  likelihoodcut = 12,
+                                  ambiguitycut = 0.05)
+
+debarcoded.ff <- assign_fcbFlowFrame(debarcoded.ff,
+                                  channel = c("pacific_blue_a"),
                                   likelihoodcut = 12,
                                   ambiguitycut = 0.05)
 
@@ -187,6 +198,13 @@ ggplot(debarcoded.fs, aes(x=`Pacific Blue-A`,
                           col = well)) +
   geom_point(shape = ".", alpha = 0.1) + 
   scale_color_manual(values = mypal, guide = F) + 
+  theme_classic() + 
+  coord_fixed()
+
+ggplot(debarcoded.fs, aes(x=`Pacific Blue-A`,
+                          y = `Pacific Orange-A`)) +
+  geom_point(shape = ".", alpha = 0.1) + 
+ # scale_color_manual(values = mypal, guide = F) + 
   theme_classic() + 
   coord_fixed()
 ```
